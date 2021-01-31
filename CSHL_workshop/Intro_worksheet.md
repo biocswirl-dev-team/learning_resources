@@ -42,6 +42,8 @@ install.packages(c("Bioconductor","swirl"))
 
 ## Overall Learning outcomes
 
+- Knowledge of R and Bioconductor
+
 - Knowledge of basic R data types
 
 - Differentiate a matrix and data.frame 
@@ -69,12 +71,28 @@ In `.rmd` files, code needs to be in code chunks (insert code chunk shortcut is 
 
 ## Topics
 
-- Basic data types
-- `data.frame` and `matrix` objects
-- Basic functions for exploring dataframes
-- Basic functions for matrices
+**What is R?**
 
-**Data Types**
+- What are vectors?
+  - Basic data types
+  
+- `data.frame` and `matrix` objects
+  - Basic functions for exploring dataframes
+  - Basic functions for matrices
+  - Indexing and Subsetting
+- Common R operations
+- Variables 
+
+ **What is Bioconductor?**
+
+- Introduction 
+
+**What is BiocSwirl**
+
+- Introduction
+- Notes and topics 
+
+### Data Types
 
 In R there are multiple types of data and I have listed a couple of basic ones below: 
 
