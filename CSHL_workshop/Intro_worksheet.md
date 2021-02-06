@@ -274,3 +274,60 @@ tail(trees)
 ```
 
 A matrix is ____
+
+# Introduction to RNAseq data analysis
+
+## Accreditation
+
+The BiocSwirl interactive course was based on [this RNA-seq workflow](https://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html) published by Love et al., updated in 2019.
+
+## Overall Learning outcomes
+
+- What is RNAseq?
+- What kind of questions can be addressed using RNAseq?
+- What is differential expression analysis?
+- How to conduct differential expression analysis of RNAseq data in R
+
+## Resources mentioned in the lecture
+- A short overview over [gene expression](https://www.nature.com/scitable/topicpage/gene-expression-14121669/) published by Scitable (Nature)
+- [RNA-Seq: a revolutionary tool for transcriptomics, Wang et al. 2009](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2949280/)
+- An overview over [different RNAseq analysis workflows](https://www.cd-genomics.com/resourse-Bioinformatics-Workflow-of-RNA-Seq.html
+)
+- [The RNA-seq workflow used in this class for differential expression analysis](https://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html) published by Love et al., updated in 2019.
+- The [BiocSwirl](https://github.com/biocswirl-dev-team/BiocSwirl) documentation on github
+
+
+## RNAseq workflow and course structure
+![RNAseq workflow image](RNAseq.jpg)
+
+## BiocSwirl course installation
+
+```r
+# installation 
+install.packages("devtools")
+library(devtools)
+devtools::install_github("biocswirl-dev-team/BiocSwirl", build_vignettes = TRUE)
+library(BiocSwirl)
+library(swirl)
+```
+
+
+```r
+# select RNAseq course
+list_courses()
+load_course('RNAseq')
+start_course()
+```
+
+These following commands can be used within the BiocSwirl course environment.
+
+
+```r
+bye() #exits the course environment
+play() #suspends feedback, allows you to ‘play’ with code
+nxt() #continue feedback
+skip() # skips question, not recommended
+```
+
+
+
