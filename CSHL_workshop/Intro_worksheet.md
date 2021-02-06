@@ -299,6 +299,11 @@ The BiocSwirl interactive course was based on [this RNA-seq workflow](https://ma
 
 ## RNAseq workflow and course structure
 ![RNAseq workflow image](RNAseq.jpg)
+### Tools used within the workflow
+Below is a list of tools that are used within the workflow. If available, each tool will be a link to further resources. Feel free to take notes on what you're learning about each tool.
+
+- FastQC:
+
 
 ## BiocSwirl course installation
 
