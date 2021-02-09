@@ -17,22 +17,26 @@ editor_options:
   chunk_output_type: inline
 ---
 
-## Accreditation 
+## Accreditation
 
 Adapted from the following resources:
 
-- Data Wrangling workshop for the BC Children's Trainee Omics Group (TOG) by Almas Khan 
-- Also Adapted from Tutorials of Victor Yuan for the BC Children's TOG.
-- 
+-   Data Wrangling workshop for the BC Children's Trainee Omics Group (TOG) by Almas Khan
+-   Also Adapted from Tutorials of Victor Yuan for the BC Children's TOG.
+-   [Perdue's Intro to R](https://www.stat.purdue.edu/bigtap/online/docs/Introduction_to_R_and_Bioconductor.html)
+## About
 
+- Authors of this script: Almas Khan and Julia Phillip
 
+- Visit BiocSwirl's Twitter page for more updates on our project. 
 
 ## Setup
 
-- Please have the latest version of R and Rstudio installed. 
-- Download the [r markdown file]() for this workshop and open it in Rstudio.
+-   Please have the latest version of R and Rstudio installed.
 
-- Install the following R packages now, if you haven't already:
+-   Download the [r markdown file]() for this workshop and open it in Rstudio.
+
+-   Install the following R packages now, if you haven't already:
 
 
 ```r
@@ -42,59 +46,81 @@ install.packages(c("Bioconductor","swirl"))
 
 ## Overall Learning outcomes
 
-- Knowledge of R and Bioconductor
+-   Knowledge of R and Bioconductor
 
-- Knowledge of basic R data types
+-   Knowledge of basic R data types
 
-- Differentiate a matrix and data.frame 
-- Understanding how to :
-  - Assign variables
-  - Run built in operations in R 
-  - Subset on a data.frame and matrix
+-   Differentiate a matrix and data.frame
+
+-   Understanding how to :
+
+    -   Assign variables
+    -   Run built in operations in R
+    -   Subset on a data.frame and matrix
 
 <!---The following chunk allows errors when knitting--->
 
 
 
-## Additional Resources: 
+## Additional Resources:
 
-- [R Swirl](https://swirlstats.com/) for interactive lesson on programming with R
-- *R for data science* [tibbles chapter](http://r4ds.had.co.nz/tibbles.html) to learn more about tibble/data.frames
-- [Learnr package](https://rstudio.github.io/learnr/) another interactive lesson within R on programming
+-   [R Swirl](https://swirlstats.com/) for interactive lesson on programming with R
+-   [R for data science](http://r4ds.had.co.nz/) : A comprehensive introductory ebook on R. 
+-   [Learnr package](https://rstudio.github.io/learnr/) another interactive lesson within R on programming
 
 
-I recommend using **r markdown file (recommended)** for all of your analysis scripts. Think of it as a like a notebook for your code that includes comments and I find it's easier to keep track of your analysis. 
+## Topics
+
+## Part 1: Intro to R:
+
+**What is R?**
+
+-   What are vectors?
+
+    -   Basic data types
+
+-   `data.frame` and `matrix` objects
+
+    -   Basic functions for exploring dataframes
+    -   Basic functions for matrices
+    -   Indexing and Subsetting
+
+-   Common R operations
+
+-   Variables
+
+### Part 2: Bioconductor and RNAseq
+
+**What is Bioconductor?**
+
+-   Introduction
+
+**What is BiocSwirl**
+
+-   Introduction
+-   Notes and topics
+
+## What is R and what is R markdownn? 
+
+- R is an open sourced statistical programming language based on an older propietary language known as S. 
+- R contains various add ons known as packages. Think of these like additional apps on that you download onto your phone.  
+- We will go over the basics of syntax within R. 
+
+But first, let's talk about the document we are currently working in. Think of it as a like a notebook for your code that includes comments and I find it's easier to keep track of your analysis.
+
+I recommend using **r markdown files** for all of your analysis scripts. 
 
 In `.rmd` files, code needs to be in code chunks (insert code chunk shortcut is Windows: `ctrl` `+` `alt` `+` `i`, Mac: `cmd` `+` `alt` `+` `i`) in order to run.
 
 
 
-## Topics
+In an R markdown you can knit a file into various formats for nice reports. 
 
-**What is R?**
+### 1.1 Data Types
 
-- What are vectors?
-  - Basic data types
-  
-- `data.frame` and `matrix` objects
-  - Basic functions for exploring dataframes
-  - Basic functions for matrices
-  - Indexing and Subsetting
-- Common R operations
-- Variables 
+In R, data is divided into various categories. 
 
- **What is Bioconductor?**
-
-- Introduction 
-
-**What is BiocSwirl**
-
-- Introduction
-- Notes and topics 
-
-### Data Types
-
-In R there are multiple types of data and I have listed a couple of basic ones below: 
+A few of the basic categories are listed below: 
 
 
 ```r
@@ -136,9 +162,9 @@ FALSE # These are logicals
 ```
 ## [1] FALSE
 ```
+These different types of data are stored in objects known as vectors. 
 
-## Data frames and matrices
-
+## 1.2 Data frames and matrices
 
 A data.frame is basically just a table, it has a certain number of rows, and a certain number of columns.
 
@@ -184,7 +210,7 @@ trees
 ## 31  20.6     87   77.0
 ```
 
-The columns of the trees `data.frame` object are individual `vector` objects. So trees has 3 columns/vectors that are each 31 elements long. The dbl is just a type of numeric class of data. 
+The columns of the trees `data.frame` object are individual `vector` objects. So trees has 3 columns/vectors that are each 31 elements long. The dbl is just a type of numeric class of data.
 
 ### Some basic functions to help understand your `data.frame` objects are:
 
@@ -273,7 +299,7 @@ tail(trees)
 ## 31  20.6     87   77.0
 ```
 
-A matrix is ____
+A matrix is
 
 # Introduction to RNAseq data analysis
 
@@ -283,22 +309,29 @@ The BiocSwirl interactive course was based on [this RNA-seq workflow](https://ma
 
 ## Overall Learning outcomes
 
+<<<<<<< HEAD
 - What is RNAseq?
 - Some considerations for planning RNAseq experiments
 - What kind of questions can be addressed using RNAseq?
 - What is differential expression analysis?
 - How to conduct differential expression analysis of RNAseq data in R
+=======
+-   What is RNAseq?
+-   What kind of questions can be addressed using RNAseq?
+-   What is differential expression analysis?
+-   How to conduct differential expression analysis of RNAseq data in R
+>>>>>>> 5859641dac255230d8a18c2f31abf685ccafd8b4
 
 ## Resources mentioned in the lecture
-- A short overview over [gene expression](https://www.nature.com/scitable/topicpage/gene-expression-14121669/) published by Scitable (Nature)
-- [RNA-Seq: a revolutionary tool for transcriptomics, Wang et al. 2009](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2949280/)
-- An overview over [different RNAseq analysis workflows](https://www.cd-genomics.com/resourse-Bioinformatics-Workflow-of-RNA-Seq.html
-)
-- [The RNA-seq workflow used in this class for differential expression analysis](https://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html) published by Love et al., updated in 2019.
-- The [BiocSwirl](https://github.com/biocswirl-dev-team/BiocSwirl) documentation on github
 
+-   A short overview over [gene expression](https://www.nature.com/scitable/topicpage/gene-expression-14121669/) published by Scitable (Nature)
+-   [RNA-Seq: a revolutionary tool for transcriptomics, Wang et al. 2009](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2949280/)
+-   An overview over [different RNAseq analysis workflows](https://www.cd-genomics.com/resourse-Bioinformatics-Workflow-of-RNA-Seq.html)
+-   [The RNA-seq workflow used in this class for differential expression analysis](https://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html) published by Love et al., updated in 2019.
+-   The [BiocSwirl](https://github.com/biocswirl-dev-team/BiocSwirl) documentation on github
 
 ## RNAseq workflow and course structure
+<<<<<<< HEAD
 ![RNAseq workflow image](RNAseq.jpg)
 
 ### Steps of the workflow
@@ -332,11 +365,18 @@ Below is a list of tools that are used within the workflow. If available, each t
 
 ## Introduction to Bioconductor
 [Bioconductor](https://bioconductor.org/) is an open source collection of bioinformatics software, written in R.
+=======
+
+![RNAseq workflow image](RNAseq.jpg) \#\#\# Tools used within the workflow Below is a list of tools that are used within the workflow. If available, each tool will be a link to further resources. Feel free to take notes on what you're learning about each tool.
+
+-   FastQC:
+>>>>>>> 5859641dac255230d8a18c2f31abf685ccafd8b4
 
 ## Introduction to BiocSwirl
 [BiocSwirl](https://github.com/biocswirl-dev-team/BiocSwirl) is an R package containing interactive coding courses teaching Bioconductor tools and workflows.
  
 ### BiocSwirl course installation
+
 
 ```r
 # installation of devtools
@@ -369,9 +409,12 @@ play() #suspends feedback, allows you to ‘play’ with code
 nxt() #continue feedback
 skip() # skips question, not recommended
 ```
+<<<<<<< HEAD
 
 # Stay in touch
 - https://twitter.com/bioctools
 - https://bioinformaticstutorials.github.io/
 - https://github.com/biocswirl-dev-team/BiocSwirl
 
+=======
+>>>>>>> 5859641dac255230d8a18c2f31abf685ccafd8b4
