@@ -150,6 +150,7 @@ The BiocSwirl interactive course was based on [this RNA-seq workflow](https://ma
 ## Overall Learning outcomes
 
 - What is RNAseq?
+- Some considerations for planning RNAseq experiments
 - What kind of questions can be addressed using RNAseq?
 - What is differential expression analysis?
 - How to conduct differential expression analysis of RNAseq data in R
@@ -165,26 +166,61 @@ The BiocSwirl interactive course was based on [this RNA-seq workflow](https://ma
 
 ## RNAseq workflow and course structure
 ![RNAseq workflow image](RNAseq.jpg)
+
+### Steps of the workflow
+
+Feel free to take notes on the different steps as you work your way through the RNAseq workflow course.
+
+- Installation of packages:
+- Intro to the biology of RNAseq:
+- fastq download:
+- fastq trimming:
+- Read alignment & quantification:
+- Pre-processing:
+- Principle Component Analysis:
+- DESeq2
+- Examine DESeq2 results:
+- Pathway analysis:
+
 ### Tools used within the workflow
+
 Below is a list of tools that are used within the workflow. If available, each tool will be a link to further resources. Feel free to take notes on what you're learning about each tool.
 
-- FastQC:
+- [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/):
+- [trimgalore](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/):
+- [STAR](https://github.com/alexdobin/STAR):
+- [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml):
+- [Tophat](https://ccb.jhu.edu/software/tophat/index.shtml):
+- [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html):
+- [Bioconductor package Rsubread](https://bioconductor.org/packages/release/bioc/html/Rsubread.html):
+- [Bioconductor package DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html):
+- [EnrichR](https://maayanlab.cloud/Enrichr/): 
 
+## Introduction to Bioconductor
+[Bioconductor](https://bioconductor.org/) is an open source collection of bioinformatics software, written in R.
 
-## BiocSwirl course installation
+## Introduction to BiocSwirl
+[BiocSwirl](https://github.com/biocswirl-dev-team/BiocSwirl) is an R package containing interactive coding courses teaching Bioconductor tools and workflows.
+ 
+### BiocSwirl course installation
 ```{r, eval = FALSE}
-# installation 
+# installation of devtools
 install.packages("devtools")
 library(devtools)
+# installation of biocswirl with vignettes
 devtools::install_github("biocswirl-dev-team/BiocSwirl", build_vignettes = TRUE)
+# load Biocswirl library
 library(BiocSwirl)
+# load swirl
 library(swirl)
 ```
 
 ```{r, eval = FALSE}
-# select RNAseq course
+# list all available courses
 list_courses()
+# select the RNAseq course for installation
 load_course('RNAseq')
+# start the BiocSwirl course environment
 start_course()
 ```
 
@@ -197,5 +233,8 @@ nxt() #continue feedback
 skip() # skips question, not recommended
 ```
 
-
+# Stay in touch
+- https://twitter.com/bioctools
+- https://bioinformaticstutorials.github.io/
+- https://github.com/biocswirl-dev-team/BiocSwirl
 
