@@ -116,7 +116,7 @@ In `.rmd` files, code needs to be in code chunks (insert code chunk shortcut is 
 
 In an R markdown you can knit a file into various formats for nice reports. 
 
-### 1.1 Data Types
+### Data Types
 
 In R, data is divided into various categories. 
 
@@ -164,7 +164,7 @@ FALSE # These are logicals
 ```
 These different types of data are stored in objects known as vectors. 
 
-## 1.2 Data frames and matrices
+## Data frames and matrices
 
 A data.frame is basically just a table, it has a certain number of rows, and a certain number of columns.
 
@@ -330,6 +330,11 @@ The BiocSwirl interactive course was based on [this RNA-seq workflow](https://ma
 -   [The RNA-seq workflow used in this class for differential expression analysis](https://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html) published by Love et al., updated in 2019.
 -   The [BiocSwirl](https://github.com/biocswirl-dev-team/BiocSwirl) documentation on github
 
+## RNAseq
+
+### Experimental considerations for RNAseq
+
+
 ## RNAseq workflow and course structure
 <<<<<<< HEAD
 ![RNAseq workflow image](RNAseq.jpg)
@@ -365,18 +370,20 @@ Below is a list of tools that are used within the workflow. If available, each t
 
 ## Introduction to Bioconductor
 [Bioconductor](https://bioconductor.org/) is an open source collection of bioinformatics software, written in R.
-=======
-
-![RNAseq workflow image](RNAseq.jpg) \#\#\# Tools used within the workflow Below is a list of tools that are used within the workflow. If available, each tool will be a link to further resources. Feel free to take notes on what you're learning about each tool.
-
--   FastQC:
->>>>>>> 5859641dac255230d8a18c2f31abf685ccafd8b4
 
 ## Introduction to BiocSwirl
 [BiocSwirl](https://github.com/biocswirl-dev-team/BiocSwirl) is an R package containing interactive coding courses teaching Bioconductor tools and workflows.
  
 ### BiocSwirl course installation
+=======
 
+![RNAseq workflow image](RNAseq.jpg) \#\#\# Tools used within the workflow Below is a list of tools that are used within the workflow. If available, each tool will be a link to further resources. Feel free to take notes on what you're learning about each tool.
+
+-   FastQC:
+
+## BiocSwirl course installation
+
+>>>>>>> 5859641dac255230d8a18c2f31abf685ccafd8b4
 
 ```r
 # installation of devtools
