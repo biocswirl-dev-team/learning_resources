@@ -309,18 +309,13 @@ The BiocSwirl interactive course was based on [this RNA-seq workflow](https://ma
 
 ## Overall Learning outcomes
 
-<<<<<<< HEAD
+
 - What is RNAseq?
 - Some considerations for planning RNAseq experiments
 - What kind of questions can be addressed using RNAseq?
 - What is differential expression analysis?
 - How to conduct differential expression analysis of RNAseq data in R
-=======
--   What is RNAseq?
--   What kind of questions can be addressed using RNAseq?
--   What is differential expression analysis?
--   How to conduct differential expression analysis of RNAseq data in R
->>>>>>> 5859641dac255230d8a18c2f31abf685ccafd8b4
+
 
 ## Resources mentioned in the lecture
 
@@ -336,8 +331,7 @@ The BiocSwirl interactive course was based on [this RNA-seq workflow](https://ma
 
 
 ## RNAseq workflow and course structure
-<<<<<<< HEAD
-![RNAseq workflow image](RNAseq.jpg)
+
 
 ### Steps of the workflow
 
@@ -374,8 +368,6 @@ Below is a list of tools that are used within the workflow. If available, each t
 ## Introduction to BiocSwirl
 [BiocSwirl](https://github.com/biocswirl-dev-team/BiocSwirl) is an R package containing interactive coding courses teaching Bioconductor tools and workflows.
  
-### BiocSwirl course installation
-=======
 
 ![RNAseq workflow image](RNAseq.jpg) \#\#\# Tools used within the workflow Below is a list of tools that are used within the workflow. If available, each tool will be a link to further resources. Feel free to take notes on what you're learning about each tool.
 
@@ -383,7 +375,6 @@ Below is a list of tools that are used within the workflow. If available, each t
 
 ## BiocSwirl course installation
 
->>>>>>> 5859641dac255230d8a18c2f31abf685ccafd8b4
 
 ```r
 # installation of devtools
@@ -416,12 +407,10 @@ play() #suspends feedback, allows you to ‘play’ with code
 nxt() #continue feedback
 skip() # skips question, not recommended
 ```
-<<<<<<< HEAD
+
 
 # Stay in touch
 - https://twitter.com/bioctools
 - https://bioinformaticstutorials.github.io/
 - https://github.com/biocswirl-dev-team/BiocSwirl
 
-=======
->>>>>>> 5859641dac255230d8a18c2f31abf685ccafd8b4
