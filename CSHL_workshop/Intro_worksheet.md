@@ -279,7 +279,7 @@ class(mat2)
 ## [1] "matrix" "array"
 ```
 
-Use [r,c] to access elements of a matrix
+Use [row,column] to access elements of a matrix
 
 ```r
 matx[1,3] # Access the 3th element of the first row
