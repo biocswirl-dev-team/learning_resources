@@ -321,6 +321,7 @@ The BiocSwirl interactive course was based on [this RNA-seq workflow](https://ma
 
 -   A short overview over [gene expression](https://www.nature.com/scitable/topicpage/gene-expression-14121669/) published by Scitable (Nature)
 -   [RNA-Seq: a revolutionary tool for transcriptomics, Wang et al. 2009](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2949280/)
+- NGS sequencing [video](https://www.illumina.com/science/technology/next-generation-sequencing/beginners.html#:~:text=Learn%20More-,How%20NGS%20Works,is%20similar%20to%20capillary%20electrophoresis.) from Illumina
 -   An overview over [different RNAseq analysis workflows](https://www.cd-genomics.com/resourse-Bioinformatics-Workflow-of-RNA-Seq.html)
 -   [The RNA-seq workflow used in this class for differential expression analysis](https://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html) published by Love et al., updated in 2019.
 -   The [BiocSwirl](https://github.com/biocswirl-dev-team/BiocSwirl) documentation on github
@@ -370,10 +371,6 @@ Below is a list of tools that are used within the workflow. If available, each t
 [BiocSwirl](https://github.com/biocswirl-dev-team/BiocSwirl) is an R package containing interactive coding courses teaching Bioconductor tools and workflows.
  
 
-
-
-
--   FastQC:
 
 ## BiocSwirl course installation
 
