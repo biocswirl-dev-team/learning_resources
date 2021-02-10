@@ -21,14 +21,16 @@ editor_options:
 
 Adapted from the following resources:
 
--   Data Wrangling workshop for the BC Children's Trainee Omics Group (TOG) by Almas Khan
+-   [Data Wrangling workshop](https://github.com/BCCHR-trainee-omics-group/StudyGroup/tree/master/workshops/2020-07-23_data_wrangling_ak) for the BC Children's Trainee Omics Group (TOG) by Almas Khan
 -   Also Adapted from Tutorials of Victor Yuan for the BC Children's TOG.
 -   [Perdue's Intro to R](https://www.stat.purdue.edu/bigtap/online/docs/Introduction_to_R_and_Bioconductor.html)
+-   [DataMentor.io R tutorial](https://www.datamentor.io/r-programming/matrix/)
+
 ## About
 
 - Authors of this script: Almas Khan and Julia Phillip
 
-- Visit BiocSwirl's Twitter page for more updates on our project. 
+
 
 ## Setup
 
@@ -43,7 +45,7 @@ install.packages(c("Bioconductor","swirl"))
 ### Add swirl Installation
 ```
 
-## Overall Learning outcomes
+# Overall Learning outcomes
 
 -   Knowledge of R and Bioconductor
 
@@ -72,23 +74,30 @@ knitr::opts_chunk$set(error = TRUE)
 
 ## Topics
 
-## Part 1: Intro to R:
+### Part 1: Intro to R:
 
-**What is R?**
+**What is R ?**
 
--   What are vectors?
+- What is R markdown?
+
+
+
+-   What are vectors and `matrix` objects?
 
     -   Basic data types
+    -   Basic functions for matrices
 
--   `data.frame` and `matrix` objects
+-   `data.frame` 
 
     -   Basic functions for exploring dataframes
-    -   Basic functions for matrices
+
     -   Indexing and Subsetting
 
 -   Common R operations
 
--   Variables
+- What do you do if get stuck?
+
+- Accrediting code
 
 ### Part 2: Bioconductor and RNAseq
 
@@ -101,10 +110,15 @@ knitr::opts_chunk$set(error = TRUE)
 -   Introduction
 -   Notes and topics
 
-## What is R and what is R markdownn? 
 
-- R is an open sourced statistical programming language based on an older propietary language known as S. 
-- R contains various add ons known as packages. Think of these like additional apps on that you download onto your phone.  
+
+# Part 1: Intro to R
+
+## What is R and what is R markdown? 
+
+- R is an open sourced statistical programming language based on an older proprietary language known as S. 
+- R contains various add ons known as packages. Think of these like additional apps on that you download on top of the base apps you get on your phone. 
+
 - We will go over the basics of syntax within R. 
 
 But first, let's talk about the document we are currently working in. Think of it as a like a notebook for your code that includes comments and I find it's easier to keep track of your analysis.
@@ -119,24 +133,99 @@ In `.rmd` files, code needs to be in code chunks (insert code chunk shortcut is 
 
 In an R markdown you can knit a file into various formats for nice reports. 
 
-### Data Types
 
-In R, data is divided into various categories. 
+
+## Data Types: Vector
+
+
+In R, the basic data structure is known as a vector. Vectors are divided into various categories. 
 
 A few of the basic categories are listed below: 
 
 ```{r}
-3.14 # This is a numeric 
-"This is a character" # A character type 
-"3.14" # This is also a character 
-TRUE # logical
-FALSE # These are logicals
+3.14 # This is a numeric vector
+"This is a character" # A character vecotr
+"3.14" # This is also a character vector
+TRUE # logical vector
+FALSE # also logical
 ```
-These different types of data are stored in objects known as vectors. 
 
-## Data frames and matrices
+Use class to check the kind of data you have.
+```{r}
+class(3.14)
+```
 
-A data.frame is basically just a table, it has a certain number of rows, and a certain number of columns.
+What if we wanted to use a value again?
+
+We can store it as an object.
+
+An object is assigned through the `<-`operator. A vector can have more than 1 object. 
+
+```{r}
+x <- 1
+y <- c("hi","hello","bonjour")
+```
+
+However,  a vector contains only 1 type of data. So if you tried this. What do you think would happen?
+
+```{r}
+z <- c("hi",1,TRUE)
+z
+```
+
+It coerces the 1 into a character vector. 
+
+
+Vectors are 1 dimensional and you can look at various properties of a vector like length.
+
+```{r}
+length(y)
+```
+
+To get the second element in a vector you use `[]`
+
+```{r}
+y[2]
+```
+
+
+## Matrix
+
+Multiple objects are stored in a matrix. A matrix like a vector only contains 1 type of data, but it has more than 1 dimension. 
+
+Matrix is a common data object in many types of bioinformatic analyses. 
+
+```{r}
+matx <- matrix(data=1:9,nrow=3,ncol=3)
+matx
+```
+
+You can also create a vector like this: 
+```{r}
+mat2 <- cbind(y,z)
+mat2
+class(mat2)
+```
+
+Use [r,c] to access elements of a matrix
+```{r}
+matx[1,3] # Access the 3th element of the first row
+matx[1,] # Access the first row
+matx[,1] # access the first column
+```
+
+
+You can even name the rows and columns of a matrix.
+
+```{r}
+rownames(matx) <- c("Earth","Venus","Mars") #name rows
+colnames(matx) <- c("A","B","C") # name columns
+matx
+```
+
+## Data frames
+
+A data.frame is basically just a table, it has a certain number of rows, and a certain number of columns. Its a special type of data object and various operations can be performed on data frames. 
 
 "trees" is a built-in dataset in R available as a `data.frame`.
 
@@ -144,7 +233,26 @@ A data.frame is basically just a table, it has a certain number of rows, and a c
 trees
 ```
 
-The columns of the trees `data.frame` object are individual `vector` objects. So trees has 3 columns/vectors that are each 31 elements long. The dbl is just a type of numeric class of data.
+The columns of the trees `data.frame` object are individual `vector` objects. So trees has 3 columns/vectors that are each 31 elements long. The dbl is just a type of numeric class of data. 
+
+Another Example of a data.frame. The ToothGrowth dataset looking at hamster teeth grown with different supplements and doses  of Vitamin C. 
+
+```{r}
+ToothGrowth
+```
+
+Here the len is a factor which is a special data type that stores the character vector as a special object behind the scenes. 
+
+Data Frames unlike a matrix can contain many different types of data like dates, characters, numbers.
+
+You can create a dataframe like this. 
+
+```{r}
+data.frame("A"=1:2,B=c("A","B"))
+```
+
+
+
 
 ### Some basic functions to help understand your `data.frame` objects are:
 
@@ -163,9 +271,122 @@ summary(trees)
 head(trees)
 # print last 6 rows
 tail(trees)
+## What type of data is trees?
+class(trees) 
 ```
 
-A matrix is
+In base R (without additional packages), we can subset the dataframe, similar to how we subset a matrix. 
+
+```{r}
+trees[1,] # gets the first row
+```
+
+```{r}
+trees[1,1] ## gets the value of the first column and the first row
+trees[1] # first column, returns a dataframe
+```
+
+However we can also call the named column using `$`. For example if we wanted the Height column. This will drop the name and return a numeric vector.
+
+```{r}
+trees$Height
+class(trees$Height)
+```
+
+These differences in subsetting return different objects so think about what output you want. 
+ 
+ 
+## Basic operations in R 
+
+See knitted html for pretty tables.
+
+**Arithmetic** operators allow us to carry out mathematical operations:
+
+| Operator | Description |
+|------|:---------|
+| + | Add |
+| - | Subtract |
+| * | Multiply |
+| / | Divide |
+| ^ | Exponent |
+| %% | Modulus (remainder from division) |
+
+**Relational** operators allow us to compare values:
+
+| Operator | Description |
+|------|:---------|
+| < | Less than |
+| > | Greater than |
+| <= | Less than or equal to |
+| >= | Greater than or equal to |
+| == | Equal to |
+| != | Not equal to |
+
+* Arithmetic and relational operators work on vectors.
+
+**Logical** operators allow us to carry out boolean operations:
+
+| Operator | Description |
+|---|:---|
+| ! | Not |
+| \| | Or (element_wise) |
+| & | And (element-wise) |
+| \|\| | Or |
+| && | And |
+
+
+```{r}
+a <- c(1,2,3)
+b <- c(4,6,8)
+```
+
+Add and substract the 2 vectors. Try another arithmetic operation above. 
+```{r}
+a+b
+a-b
+```
+
+How would you check if 5 is greater than 7? How would you check if 5+2 is the same as 2+5
+```{r}
+5>7
+(5+2)== 2+5
+```
+
+Let's bind a and b into a matrix called c. 
+```{r}
+c <- cbind(a,b)
+```
+
+How would you do the following 
+```{r}
+c[c>3] ## select elements greater than 3
+c[c>3|c==1] ## select elements greater than 3 or equal to 1 
+```
+
+## Where to get help?
+
+R like any language can be confusing at times. Its okay if you get stuck. 
+
+If you are confused about how to do something or what to do next follow these steps below:
+
+1. Read the error message (if there is one). Error messages often times help convey what you might have missed. 
+2. Check your code for simple mistakes. Did you miss a bracket or quotation mark, did you misspell an object name or use `=` instead of `==`? 
+3. Read the function documentation. Use the `?` command to pull up the help page.
+  - Check the inputs the function needs (a `data.frame` vs a `matrix`)
+4. Copy and paste the error message and name of function into **Google**?
+
+### Importantly for Point 4, always accredit the code you use 
+
+If you used stackoverflow or any other website use code comments like # or a comment before the code chunk to accredit the webite
+
+Ex. 
+
+Code from www.helpfulwebsite.fakename.com/user1/howto
+
+```{r}
+1+1 #www.helpfulwebsite.fakename.com/user1/howto
+```
+
 
 # Introduction to RNAseq data analysis
 
@@ -235,10 +456,6 @@ Below is a list of tools that are used within the workflow. If available, each t
 ## Introduction to BiocSwirl
 [BiocSwirl](https://github.com/biocswirl-dev-team/BiocSwirl) is an R package containing interactive coding courses teaching Bioconductor tools and workflows.
  
-
-
-
-
 -   FastQC:
 
 ## BiocSwirl course installation
@@ -275,7 +492,7 @@ skip() # skips question, not recommended
 
 
 # Stay in touch
-- https://twitter.com/bioctools
+- Visit BiocSwirl's Twitter page for more updates on our project.: https://twitter.com/bioctools 
 - https://bioinformaticstutorials.github.io/
 - https://github.com/biocswirl-dev-team/BiocSwirl
 
