@@ -79,8 +79,6 @@ install.packages(c("Bioconductor","swirl"))
 
 - What is R markdown?
 
-
-
 -   What are vectors and `matrix` objects?
 
     -   Basic data types
@@ -824,7 +822,7 @@ Feel free to take notes on the different steps as you work your way through the 
 - DESeq2
 - Examine DESeq2 results:
 - Pathway analysis:
-
+-   FastQC:
 ### Tools used within the workflow
 
 Below is a list of tools that are used within the workflow. If available, each tool will be a link to further resources. Feel free to take notes on what you're learning about each tool.
@@ -845,7 +843,7 @@ Below is a list of tools that are used within the workflow. If available, each t
 ## Introduction to BiocSwirl
 [BiocSwirl](https://github.com/biocswirl-dev-team/BiocSwirl) is an R package containing interactive coding courses teaching Bioconductor tools and workflows.
  
--   FastQC:
+
 
 ## BiocSwirl course installation
 
