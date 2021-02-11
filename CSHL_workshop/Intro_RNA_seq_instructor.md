@@ -28,7 +28,7 @@ Adapted from the following resources:
 
 ## About
 
-- Authors of this script: Almas Khan and Julia Phillip
+- Authors of this script: Almas Khan and Julia Philipp
 
 
 
@@ -278,6 +278,8 @@ class(mat2)
 ```
 ## [1] "matrix" "array"
 ```
+
+
 
 Use [row,column] to access elements of a matrix
 
@@ -806,7 +808,7 @@ The BiocSwirl interactive course was based on [this RNA-seq workflow](https://ma
 
 ## RNAseq workflow and course structure
 
-![RNAseq workflow image](RNAseq.jpg) 
+![RNAseq workflow image](https://github.com/biocswirl-dev-team/learning_resources/blob/workshop_cshl/CSHL_workshop/RNAseq.jpg) 
 
 ### Steps of the workflow
 
