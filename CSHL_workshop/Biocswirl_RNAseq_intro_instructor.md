@@ -1,5 +1,5 @@
 ---
-title: "CSHL Workshop Tutorial"
+title: "CSHL Intro to RNASeq with BiocSwirl Workshop"
 author: "Almas K."
 date: "30/01/2021"
 output:
@@ -36,15 +36,6 @@ Adapted from the following resources:
 
 -   Please have the latest version of R and Rstudio installed.
 
--   Download the [r markdown file]() for this workshop and open it in Rstudio.
-
--   Install the following R packages now, if you haven't already:
-
-
-```r
-install.packages(c("Bioconductor","swirl"))
-### Add swirl Installation
-```
 
 # Overall Learning outcomes
 
@@ -137,6 +128,8 @@ In R, the basic data structure is known as a vector. Vectors are divided into va
 
 A few of the basic categories are listed below: 
 
+Use Windows: `ctrl` `+`enter`, Mac:`cmd` + `enter` to run a single line of the code chunk. If there is multiple lines of code you can run the entire chunk using the play button (green triangle) on the code chunk. 
+
 
 ```r
 3.14 # This is a numeric vector
@@ -193,6 +186,8 @@ What if we wanted to use a value again?
 We can store it as an object.
 
 An object is assigned through the `<-`operator. A vector can have more than 1 object. 
+
+Use `alt`+ `-` (Windows) or `option`+ `-`(Mac) for the `<-` operator.
 
 
 ```r
@@ -680,6 +675,7 @@ See knitted html for pretty tables.
 | \|\| | Or |
 | && | And |
 
+The vector `a` is created for you using the values 1,2,3. Create a second vector `b` with the values 4,6,8
 
 
 ```r
@@ -687,7 +683,7 @@ a <- c(1,2,3)
 b <- c(4,6,8)
 ```
 
-Add and substract the 2 vectors. Try another arithmetic operation above. 
+Add and subtract the 2 vectors. Try another arithmetic operation above. 
 
 ```r
 a+b
@@ -808,7 +804,7 @@ The BiocSwirl interactive course was based on [this RNA-seq workflow](https://ma
 
 ## RNAseq workflow and course structure
 
-![RNAseq workflow image](https://github.com/biocswirl-dev-team/learning_resources/blob/workshop_cshl/CSHL_workshop/RNAseq.jpg) 
+![RNAseq workflow image](https://raw.githubusercontent.com/biocswirl-dev-team/learning_resources/workshop_cshl/CSHL_workshop/RNAseq.jpg) 
 
 ### Steps of the workflow
 
