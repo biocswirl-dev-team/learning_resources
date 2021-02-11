@@ -398,9 +398,6 @@ The BiocSwirl interactive course was based on [this RNA-seq workflow](https://ma
 -   [The RNA-seq workflow used in this class for differential expression analysis](https://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html) published by Love et al., updated in 2019.
 -   The [BiocSwirl](https://github.com/biocswirl-dev-team/BiocSwirl) documentation on github
 
-## RNAseq
-
-### Experimental considerations for RNAseq
 
 ## RNAseq workflow and course structure
 
