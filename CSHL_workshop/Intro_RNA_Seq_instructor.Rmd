@@ -205,6 +205,8 @@ mat2
 class(mat2)
 ```
 
+
+
 Use [row,column] to access elements of a matrix
 ```{r}
 matx[1,3] # Access the 3th element of the first row
