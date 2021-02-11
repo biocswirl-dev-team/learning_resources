@@ -1,5 +1,5 @@
 ---
-title: "CSHL Workshop Tutorial"
+title: "CSHL Intro to RNASeq with BiocSwirl Workshop"
 author: "Almas K."
 date: "30/01/2021"
 output:
@@ -36,14 +36,6 @@ Adapted from the following resources:
 
 -   Please have the latest version of R and Rstudio installed.
 
--   Download the [r markdown file]() for this workshop and open it in Rstudio.
-
--   Install the following R packages now, if you haven't already:
-
-```{r, eval = F}
-install.packages(c("Bioconductor","swirl"))
-### Add swirl Installation
-```
 
 # Overall Learning outcomes
 
@@ -159,9 +151,12 @@ We can store it as an object.
 
 An object is assigned through the `<-`operator. A vector can have more than 1 object. 
 
+Use `alt`+ `-` (Windows) or `option`+ `-`(Mac) for the `<-` operator.
+
 ```{r}
 x <- 1
 y <- c("hi","hello","bonjour")
+
 ```
 
 However,  a vector contains only 1 type of data. So if you tried this. What do you think would happen?
