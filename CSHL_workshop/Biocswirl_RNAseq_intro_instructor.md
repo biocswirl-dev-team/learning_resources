@@ -83,7 +83,7 @@ Adapted from the following resources:
 
 -   Common R operations
 
-- What do you do if get stuck?
+-   Where to get help
 
 - Accrediting code
 
@@ -140,7 +140,7 @@ Use Windows: `ctrl` `+`enter`, Mac:`cmd` + `enter` to run a single line of the c
 ```
 
 ```r
-"This is a character" # A character vecotr
+"This is a character" # A character vector
 ```
 
 ```
@@ -235,7 +235,7 @@ y[2]
 
 ## Matrix
 
-Multiple objects are stored in a matrix. A matrix like a vector only contains 1 type of data, but it has more than 1 dimension. 
+Multiple objects are stored in a matrix. Like a vector, a matrix only contains 1 type of data, but it has more than 1 dimension. 
 
 Matrix is a common data object in many types of bioinformatic analyses. 
 
@@ -279,7 +279,7 @@ class(mat2)
 Use [row,column] to access elements of a matrix
 
 ```r
-matx[1,3] # Access the 3th element of the first row
+matx[1,3] # Access the 3rd element of the first row
 ```
 
 ```
@@ -321,7 +321,7 @@ matx
 
 ## Data frames
 
-A data.frame is basically just a table, it has a certain number of rows, and a certain number of columns. Its a special type of data object and various operations can be performed on data frames. 
+A data.frame is basically just a table. It has a certain number of rows, and a certain number of columns. It's a special type of data object and various operations can be performed on data frames. 
 
 "trees" is a built-in dataset in R available as a `data.frame`.
 
@@ -440,7 +440,7 @@ ToothGrowth
 
 Here the len is a factor which is a special data type that stores the character vector as a special object behind the scenes. 
 
-Data Frames unlike a matrix can contain many different types of data like dates, characters, numbers.
+Data Frames, unlike a matrix, can contain many different types of data like dates, characters, numbers.
 
 You can create a dataframe like this. 
 
@@ -745,7 +745,7 @@ c[c>3|c==1] ## select elements greater than 3 or equal to 1
 
 ## Where to get help?
 
-R like any language can be confusing at times. Its okay if you get stuck. 
+R like any language can be confusing at times. It's okay if you get stuck. 
 
 If you are confused about how to do something or what to do next follow these steps below:
 
@@ -753,7 +753,7 @@ If you are confused about how to do something or what to do next follow these st
 2. Check your code for simple mistakes. Did you miss a bracket or quotation mark, did you misspell an object name or use `=` instead of `==`? 
 3. Read the function documentation. Use the `?` command to pull up the help page.
   - Check the inputs the function needs (a `data.frame` vs a `matrix`)
-4. Copy and paste the error message and name of function into **Google**?
+4. Copy and paste the error message and name of function into **Google**
 
 ### Importantly for Point 4, always accredit the code you use 
 

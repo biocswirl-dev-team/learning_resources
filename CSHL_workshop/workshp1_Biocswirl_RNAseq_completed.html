@@ -11,6 +11,7 @@
 
 <meta name="author" content="Almas K." />
 
+<meta name="date" content="2021-12-02" />
 
 <title>CSHL Intro to RNASeq with BiocSwirl Workshop</title>
 
@@ -267,7 +268,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">CSHL Intro to RNASeq with BiocSwirl Workshop</h1>
 <h4 class="author">Almas K.</h4>
-<h4 class="date">30/01/2021</h4>
+<h4 class="date">12/02/2021</h4>
 
 </div>
 
@@ -364,6 +365,8 @@ div.tocify {
 <p>But first, let’s talk about the document we are currently working in. Think of it as a like a notebook for your code that includes comments and I find it’s easier to keep track of your analysis.</p>
 <p>I recommend using <strong>r markdown files</strong> for all of your analysis scripts.</p>
 <p>In <code>.rmd</code> files, code needs to be in code chunks (insert code chunk shortcut is Windows: <code>ctrl</code> <code>+</code> <code>alt</code> <code>+</code> <code>i</code>, Mac: <code>cmd</code> <code>+</code> <code>alt</code> <code>+</code> <code>i</code>) in order to run.</p>
+<pre class="r"><code>2+2</code></pre>
+<pre><code>## [1] 4</code></pre>
 <p>In an R markdown you can knit a file into various formats for nice reports.</p>
 </div>
 <div id="data-types-vector" class="section level2" number="2.2">
@@ -373,7 +376,7 @@ div.tocify {
 <p>Use Windows: <code>ctrl</code> <code>+</code>enter<code>, Mac:</code>cmd<code>+</code>enter` to run a single line of the code chunk. If there is multiple lines of code you can run the entire chunk using the play button (green triangle) on the code chunk.</p>
 <pre class="r"><code>3.14 # This is a numeric vector</code></pre>
 <pre><code>## [1] 3.14</code></pre>
-<pre class="r"><code>&quot;This is a character&quot; # A character vector</code></pre>
+<pre class="r"><code>&quot;This is a character&quot; # A character vector </code></pre>
 <pre><code>## [1] &quot;This is a character&quot;</code></pre>
 <pre class="r"><code>&quot;3.14&quot; # This is also a character vector</code></pre>
 <pre><code>## [1] &quot;3.14&quot;</code></pre>
@@ -381,60 +384,69 @@ div.tocify {
 <pre><code>## [1] TRUE</code></pre>
 <pre class="r"><code>FALSE # also logical</code></pre>
 <pre><code>## [1] FALSE</code></pre>
-<pre class="r"><code>FILL_THIS_IN(3.14)</code></pre>
-<pre><code>## Error in FILL_THIS_IN(3.14): could not find function &quot;FILL_THIS_IN&quot;</code></pre>
+<p>What is the class of this vector?</p>
+<pre class="r"><code>class(3.14)</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
 <p>What if we wanted to use a value again?</p>
 <p>We can store it as an object.</p>
 <p>An object is assigned through the <code>&lt;-</code>operator. A vector can have more than 1 object.</p>
 <p>Use <code>alt</code>+ <code>-</code> (Windows) or <code>option</code>+ <code>-</code>(Mac) for the <code>&lt;-</code> operator.</p>
 <pre class="r"><code>x &lt;- 1
-y &lt;- FILL_THIS_IN #store multiple values of 1 type</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;FILL_THIS_IN&#39; not found</code></pre>
+y &lt;- c(&quot;hi&quot;,&quot;hello&quot;,&quot;bonjour&quot;) #store multiple values of 1 type</code></pre>
 <p>However, a vector contains only 1 type of data. So if you tried this. What do you think would happen?</p>
-<pre class="r"><code>z &lt;- FILL_THIS_IN</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;FILL_THIS_IN&#39; not found</code></pre>
-<pre class="r"><code>z</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;z&#39; not found</code></pre>
+<pre class="r"><code>z &lt;- c(&quot;hi&quot;,1,TRUE)
+z</code></pre>
+<pre><code>## [1] &quot;hi&quot;   &quot;1&quot;    &quot;TRUE&quot;</code></pre>
 <p>It coerces the 1 into a character vector.</p>
 <p>Vectors are 1 dimensional and you can look at various properties of a vector like length.</p>
-<pre class="r"><code>FILL_THIS_IN(y)</code></pre>
-<pre><code>## Error in FILL_THIS_IN(y): could not find function &quot;FILL_THIS_IN&quot;</code></pre>
+<pre class="r"><code>length(y)</code></pre>
+<pre><code>## [1] 3</code></pre>
 <p>To get the second element in a vector you use <code>[]</code></p>
-<pre class="r"><code>FILL_THIS_IN</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;FILL_THIS_IN&#39; not found</code></pre>
+<pre class="r"><code>y[2]</code></pre>
+<pre><code>## [1] &quot;hello&quot;</code></pre>
 </div>
 <div id="matrix" class="section level2" number="2.3">
 <h2 number="2.3"><span class="header-section-number">2.3</span> Matrix</h2>
 <p>Multiple objects are stored in a matrix. Like a vector, a matrix only contains 1 type of data, but it has more than 1 dimension.</p>
 <p>Matrix is a common data object in many types of bioinformatic analyses.</p>
-<pre class="r"><code>matx &lt;- FILL_THIS_IN(data=1:9,nrow=3,ncol=3)</code></pre>
-<pre><code>## Error in FILL_THIS_IN(data = 1:9, nrow = 3, ncol = 3): could not find function &quot;FILL_THIS_IN&quot;</code></pre>
-<pre class="r"><code>matx</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;matx&#39; not found</code></pre>
-<p>You can also create a vector like this:</p>
-<pre class="r"><code>mat2 &lt;- FILL_THIS_IN(y,z)</code></pre>
-<pre><code>## Error in FILL_THIS_IN(y, z): could not find function &quot;FILL_THIS_IN&quot;</code></pre>
-<pre class="r"><code>mat2</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;mat2&#39; not found</code></pre>
+<pre class="r"><code>matx &lt;- matrix(data=1:9,nrow=3,ncol=3)
+matx</code></pre>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    4    7
+## [2,]    2    5    8
+## [3,]    3    6    9</code></pre>
+<pre class="r"><code>maty &lt;- t(matx)</code></pre>
+<pre class="r"><code>maty</code></pre>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    2    3
+## [2,]    4    5    6
+## [3,]    7    8    9</code></pre>
+<p>You can also create a matrix like this:</p>
+<pre class="r"><code>mat2 &lt;- cbind(y,z)
+mat2</code></pre>
+<pre><code>##      y         z     
+## [1,] &quot;hi&quot;      &quot;hi&quot;  
+## [2,] &quot;hello&quot;   &quot;1&quot;   
+## [3,] &quot;bonjour&quot; &quot;TRUE&quot;</code></pre>
 <pre class="r"><code>class(mat2)</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;mat2&#39; not found</code></pre>
-<p>Use [row,column] to access elements of a matrix</p>
-<pre class="r"><code>matx[FILL_THIS_IN] # Access the 3rd element of the first row</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;matx&#39; not found</code></pre>
-<pre class="r"><code>matx[FILL_THIS_IN] # Access the first row</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;matx&#39; not found</code></pre>
-<pre class="r"><code>matx[FILL_THIS_IN] # access the first column</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;matx&#39; not found</code></pre>
+<pre><code>## [1] &quot;matrix&quot; &quot;array&quot;</code></pre>
+<p>Use [row,column] to access elements of a matrix #, ,#</p>
+<pre class="r"><code>matx[1,3] # Access the 3rd element of the first row</code></pre>
+<pre><code>## [1] 7</code></pre>
+<pre class="r"><code>matx[1,] # Access the first row</code></pre>
+<pre><code>## [1] 1 4 7</code></pre>
+<pre class="r"><code>matx[,1] # access the first column</code></pre>
+<pre><code>## [1] 1 2 3</code></pre>
 <p>You can even name the rows and columns of a matrix.</p>
-<pre class="r"><code>FILL_THIS_IN(matx) &lt;- c(&quot;Earth&quot;,&quot;Venus&quot;,&quot;Mars&quot;) #name rows</code></pre>
-<pre><code>## Error in FILL_THIS_IN(matx) &lt;- c(&quot;Earth&quot;, &quot;Venus&quot;, &quot;Mars&quot;): object &#39;matx&#39; not found</code></pre>
-<pre class="r"><code>FILL_THIS_IN(matx) &lt;- c(&quot;A&quot;,&quot;B&quot;,&quot;C&quot;) # name columns</code></pre>
-<pre><code>## Error in FILL_THIS_IN(matx) &lt;- c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;): object &#39;matx&#39; not found</code></pre>
-<pre class="r"><code>matx</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;matx&#39; not found</code></pre>
-</div>
-<div id="data-frames" class="section level2" number="2.4">
-<h2 number="2.4"><span class="header-section-number">2.4</span> Data frames</h2>
+<pre class="r"><code>rownames(matx) &lt;- c(&quot;Earth&quot;,&quot;Venus&quot;,&quot;Mars&quot;) #name rows
+colnames(matx) &lt;- c(&quot;j&quot;,&quot;b&quot;,&quot;c&quot;) # name columns
+colnames(maty) &lt;- rownames(matx)
+maty</code></pre>
+<pre><code>##      Earth Venus Mars
+## [1,]     1     2    3
+## [2,]     4     5    6
+## [3,]     7     8    9</code></pre>
+<p>t will flip the matrix ## Data frames</p>
 <p>A data.frame is basically just a table. It has a certain number of rows, and a certain number of columns. It’s a special type of data object and various operations can be performed on data frames.</p>
 <p>“trees” is a built-in dataset in R available as a <code>data.frame</code>.</p>
 <pre class="r"><code>trees</code></pre>
@@ -534,54 +546,154 @@ y &lt;- FILL_THIS_IN #store multiple values of 1 type</code></pre>
 ## 58 27.3   OJ  2.0
 ## 59 29.4   OJ  2.0
 ## 60 23.0   OJ  2.0</code></pre>
-<p>Here the len is a factor which is a special data type that stores the character vector as a special object behind the scenes.</p>
+<p>Here the supp is a factor which is a special data type that stores the character vector as a special object behind the scenes.</p>
 <p>Data Frames, unlike a matrix, can contain many different types of data like dates, characters, numbers.</p>
 <p>You can create a dataframe like this.</p>
-<pre class="r"><code>FILL_THIS_IN(&quot;A&quot;=1:2,B=c(&quot;A&quot;,&quot;B&quot;))</code></pre>
-<pre><code>## Error in FILL_THIS_IN(A = 1:2, B = c(&quot;A&quot;, &quot;B&quot;)): could not find function &quot;FILL_THIS_IN&quot;</code></pre>
-<div id="some-basic-functions-to-help-understand-your-data.frame-objects-are" class="section level3" number="2.4.1">
-<h3 number="2.4.1"><span class="header-section-number">2.4.1</span> Some basic functions to help understand your <code>data.frame</code> objects are:</h3>
+<pre class="r"><code>data.frame(&quot;A&quot;=1:2,B=c(&quot;A&quot;,&quot;B&quot;))</code></pre>
+<pre><code>##   A B
+## 1 1 A
+## 2 2 B</code></pre>
+<div id="some-basic-functions-to-help-understand-your-data.frame-objects-are" class="section level3" number="2.3.1">
+<h3 number="2.3.1"><span class="header-section-number">2.3.1</span> Some basic functions to help understand your <code>data.frame</code> objects are:</h3>
 <pre class="r"><code># number of rows
-FILL_THIS_IN(trees)</code></pre>
-<pre><code>## Error in FILL_THIS_IN(trees): could not find function &quot;FILL_THIS_IN&quot;</code></pre>
+nrow(trees)</code></pre>
+<pre><code>## [1] 31</code></pre>
 <pre class="r"><code># number of columns
-FILL_THIS_IN(trees)</code></pre>
-<pre><code>## Error in FILL_THIS_IN(trees): could not find function &quot;FILL_THIS_IN&quot;</code></pre>
+ncol(trees)</code></pre>
+<pre><code>## [1] 3</code></pre>
 <pre class="r"><code># row x columns
-FILL_THIS_IN(trees)</code></pre>
-<pre><code>## Error in FILL_THIS_IN(trees): could not find function &quot;FILL_THIS_IN&quot;</code></pre>
+dim(trees)</code></pre>
+<pre><code>## [1] 31  3</code></pre>
 <pre class="r"><code># some basic info on the &quot;structure&quot; of the data.frame
-FILL_THIS_IN(trees)</code></pre>
-<pre><code>## Error in FILL_THIS_IN(trees): could not find function &quot;FILL_THIS_IN&quot;</code></pre>
+str(trees)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    31 obs. of  3 variables:
+##  $ Girth : num  8.3 8.6 8.8 10.5 10.7 10.8 11 11 11.1 11.2 ...
+##  $ Height: num  70 65 63 72 81 83 66 75 80 75 ...
+##  $ Volume: num  10.3 10.3 10.2 16.4 18.8 19.7 15.6 18.2 22.6 19.9 ...</code></pre>
 <pre class="r"><code># calculates some summary statistics on each column
-FILL_THIS_IN(trees)</code></pre>
-<pre><code>## Error in FILL_THIS_IN(trees): could not find function &quot;FILL_THIS_IN&quot;</code></pre>
+summary(trees)</code></pre>
+<pre><code>##      Girth           Height       Volume     
+##  Min.   : 8.30   Min.   :63   Min.   :10.20  
+##  1st Qu.:11.05   1st Qu.:72   1st Qu.:19.40  
+##  Median :12.90   Median :76   Median :24.20  
+##  Mean   :13.25   Mean   :76   Mean   :30.17  
+##  3rd Qu.:15.25   3rd Qu.:80   3rd Qu.:37.30  
+##  Max.   :20.60   Max.   :87   Max.   :77.00</code></pre>
 <pre class="r"><code># print first 6 rows
-FILL_THIS_IN(trees)</code></pre>
-<pre><code>## Error in FILL_THIS_IN(trees): could not find function &quot;FILL_THIS_IN&quot;</code></pre>
+head(trees)</code></pre>
+<pre><code>##   Girth Height Volume
+## 1   8.3     70   10.3
+## 2   8.6     65   10.3
+## 3   8.8     63   10.2
+## 4  10.5     72   16.4
+## 5  10.7     81   18.8
+## 6  10.8     83   19.7</code></pre>
 <pre class="r"><code># print last 6 rows
-FILL_THIS_IN(trees)</code></pre>
-<pre><code>## Error in FILL_THIS_IN(trees): could not find function &quot;FILL_THIS_IN&quot;</code></pre>
+tail(trees)</code></pre>
+<pre><code>##    Girth Height Volume
+## 26  17.3     81   55.4
+## 27  17.5     82   55.7
+## 28  17.9     80   58.3
+## 29  18.0     80   51.5
+## 30  18.0     80   51.0
+## 31  20.6     87   77.0</code></pre>
 <pre class="r"><code>## What type of data is trees?
-FILL_THIS_IN(trees) </code></pre>
-<pre><code>## Error in FILL_THIS_IN(trees): could not find function &quot;FILL_THIS_IN&quot;</code></pre>
+class(trees) </code></pre>
+<pre><code>## [1] &quot;data.frame&quot;</code></pre>
 <p>In base R (without additional packages), we can subset the dataframe, similar to how we subset a matrix.</p>
-<pre class="r"><code>treesFILL_THIS_IN # gets the first row</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;treesFILL_THIS_IN&#39; not found</code></pre>
-<pre class="r"><code>treesFILL_THIS_IN ## gets the value of the first column and the first row</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;treesFILL_THIS_IN&#39; not found</code></pre>
-<pre class="r"><code>treesFILL_THIS_IN # first column, returns a dataframe</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;treesFILL_THIS_IN&#39; not found</code></pre>
+<p>dataframe[r,c]</p>
+<p>dataframe[#] column</p>
+<pre class="r"><code>trees[1,] # gets the first row</code></pre>
+<pre><code>##   Girth Height Volume
+## 1   8.3     70   10.3</code></pre>
+<pre class="r"><code>trees[1,1] ## gets the value of the first column and the first row</code></pre>
+<pre><code>## [1] 8.3</code></pre>
+<pre class="r"><code>trees[1]# first column, returns a dataframe</code></pre>
+<pre><code>##    Girth
+## 1    8.3
+## 2    8.6
+## 3    8.8
+## 4   10.5
+## 5   10.7
+## 6   10.8
+## 7   11.0
+## 8   11.0
+## 9   11.1
+## 10  11.2
+## 11  11.3
+## 12  11.4
+## 13  11.4
+## 14  11.7
+## 15  12.0
+## 16  12.9
+## 17  12.9
+## 18  13.3
+## 19  13.7
+## 20  13.8
+## 21  14.0
+## 22  14.2
+## 23  14.5
+## 24  16.0
+## 25  16.3
+## 26  17.3
+## 27  17.5
+## 28  17.9
+## 29  18.0
+## 30  18.0
+## 31  20.6</code></pre>
+<pre class="r"><code>t2 &lt;- trees[1:2]
+class(trees[2])</code></pre>
+<pre><code>## [1] &quot;data.frame&quot;</code></pre>
+<pre class="r"><code>summary(t2)</code></pre>
+<pre><code>##      Girth           Height  
+##  Min.   : 8.30   Min.   :63  
+##  1st Qu.:11.05   1st Qu.:72  
+##  Median :12.90   Median :76  
+##  Mean   :13.25   Mean   :76  
+##  3rd Qu.:15.25   3rd Qu.:80  
+##  Max.   :20.60   Max.   :87</code></pre>
+<pre class="r"><code>t2</code></pre>
+<pre><code>##    Girth Height
+## 1    8.3     70
+## 2    8.6     65
+## 3    8.8     63
+## 4   10.5     72
+## 5   10.7     81
+## 6   10.8     83
+## 7   11.0     66
+## 8   11.0     75
+## 9   11.1     80
+## 10  11.2     75
+## 11  11.3     79
+## 12  11.4     76
+## 13  11.4     76
+## 14  11.7     69
+## 15  12.0     75
+## 16  12.9     74
+## 17  12.9     85
+## 18  13.3     86
+## 19  13.7     71
+## 20  13.8     64
+## 21  14.0     78
+## 22  14.2     80
+## 23  14.5     74
+## 24  16.0     72
+## 25  16.3     77
+## 26  17.3     81
+## 27  17.5     82
+## 28  17.9     80
+## 29  18.0     80
+## 30  18.0     80
+## 31  20.6     87</code></pre>
 <p>However we can also call the named column using <code>$</code>. For example if we wanted the Height column. This will drop the name and return a numeric vector.</p>
-<pre class="r"><code>treesFILL_THIS_IN</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;treesFILL_THIS_IN&#39; not found</code></pre>
-<pre class="r"><code>FILL_THIS_IN(treesFILL_THIS_IN) # checks the class of the height column</code></pre>
-<pre><code>## Error in FILL_THIS_IN(treesFILL_THIS_IN): could not find function &quot;FILL_THIS_IN&quot;</code></pre>
+<pre class="r"><code>t3 &lt;- trees$Height
+class(trees$Height) # checks the class of the height column</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
 <p>These differences in subsetting return different objects so think about what output you want.</p>
 </div>
 </div>
-<div id="basic-operations-in-r" class="section level2" number="2.5">
-<h2 number="2.5"><span class="header-section-number">2.5</span> Basic operations in R</h2>
+<div id="basic-operations-in-r" class="section level2" number="2.4">
+<h2 number="2.4"><span class="header-section-number">2.4</span> Basic operations in R</h2>
 <p>See knitted html for pretty tables.</p>
 <p><strong>Arithmetic</strong> operators allow us to carry out mathematical operations:</p>
 <table>
@@ -670,16 +782,16 @@ FILL_THIS_IN(trees) </code></pre>
 <td align="left">Not</td>
 </tr>
 <tr class="even">
-<td>|</td>
-<td align="left">Or (element_wise)</td>
+<td></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td>&amp;</td>
 <td align="left">And (element-wise)</td>
 </tr>
 <tr class="even">
-<td>||</td>
-<td align="left">Or</td>
+<td></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td>&amp;&amp;</td>
@@ -689,29 +801,50 @@ FILL_THIS_IN(trees) </code></pre>
 </table>
 <p>The vector <code>a</code> is created for you using the values 1,2,3. Create a second vector <code>b</code> with the values 4,6,8</p>
 <pre class="r"><code>a &lt;- c(1,2,3)
-FILL_THIS_IN</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;FILL_THIS_IN&#39; not found</code></pre>
+b &lt;- c(4,6,8)</code></pre>
 <p>Add and subtract the 2 vectors. Try another arithmetic operation from the list above.</p>
-<pre class="r"><code>FILL_THIS_IN</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;FILL_THIS_IN&#39; not found</code></pre>
-<pre class="r"><code>FILL_THIS_IN</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;FILL_THIS_IN&#39; not found</code></pre>
+<pre class="r"><code>a+b</code></pre>
+<pre><code>## [1]  5  8 11</code></pre>
+<pre class="r"><code>a-b</code></pre>
+<pre><code>## [1] -3 -4 -5</code></pre>
+<pre class="r"><code>a*b</code></pre>
+<pre><code>## [1]  4 12 24</code></pre>
 <p>How would you check if 5 is greater than 7? How would you check if 5+2 is the same as 2+5</p>
-<pre class="r"><code>FILL_THIS_IN</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;FILL_THIS_IN&#39; not found</code></pre>
-<pre class="r"><code>FILL_THIS_IN</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;FILL_THIS_IN&#39; not found</code></pre>
-<p>Let’s bind a and b into a matrix called c.</p>
-<pre class="r"><code>c &lt;- FILL_THIS_IN</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;FILL_THIS_IN&#39; not found</code></pre>
-<p>How would you do the following</p>
-<pre class="r"><code>FILL_THIS_IN ## select elements greater than 3</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;FILL_THIS_IN&#39; not found</code></pre>
-<pre class="r"><code>FILL_THIS_IN ## select elements greater than 3 or equal to 1 </code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;FILL_THIS_IN&#39; not found</code></pre>
+<pre class="r"><code>5&gt;7</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code>(5+2)==(2+5)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p>Let’s bind a and b into a matrix called d.</p>
+<pre class="r"><code>d &lt;- cbind(a,b)
+d</code></pre>
+<pre><code>##      a b
+## [1,] 1 4
+## [2,] 2 6
+## [3,] 3 8</code></pre>
+<p>How would you do the following? Within d</p>
+<p>d[logical operator]</p>
+<pre class="r"><code>d[d&gt;3] ## select elements greater than 3</code></pre>
+<pre><code>## [1] 4 6 8</code></pre>
+<pre class="r"><code>d[d&gt;3|d==1] ## select elements greater than 3 or equal to 1</code></pre>
+<pre><code>## [1] 1 4 6 8</code></pre>
+<pre class="r"><code>d[!(d&gt;3)]</code></pre>
+<pre><code>## [1] 1 2 3</code></pre>
+<pre class="r"><code>d[d&gt;3&amp;d&gt;4] ## &amp;&amp; checks the entire thing whether meets the condition</code></pre>
+<pre><code>## [1] 6 8</code></pre>
+<pre class="r"><code>rbind(y,z) # r binds rows</code></pre>
+<pre><code>##   [,1] [,2]    [,3]     
+## y &quot;hi&quot; &quot;hello&quot; &quot;bonjour&quot;
+## z &quot;hi&quot; &quot;1&quot;     &quot;TRUE&quot;</code></pre>
+<pre class="r"><code>cbind(y,z) # c binds columns</code></pre>
+<pre><code>##      y         z     
+## [1,] &quot;hi&quot;      &quot;hi&quot;  
+## [2,] &quot;hello&quot;   &quot;1&quot;   
+## [3,] &quot;bonjour&quot; &quot;TRUE&quot;</code></pre>
+<pre class="r"><code>rnaseq_dat &lt;- y
+mat_norm &lt;- z</code></pre>
 </div>
-<div id="where-to-get-help" class="section level2" number="2.6">
-<h2 number="2.6"><span class="header-section-number">2.6</span> Where to get help?</h2>
+<div id="where-to-get-help" class="section level2" number="2.5">
+<h2 number="2.5"><span class="header-section-number">2.5</span> Where to get help?</h2>
 <p>R like any language can be confusing at times. It’s okay if you get stuck.</p>
 <p>If you are confused about how to do something or what to do next follow these steps below:</p>
 <ol style="list-style-type: decimal">
@@ -725,8 +858,8 @@ FILL_THIS_IN</code></pre>
 <ol start="4" style="list-style-type: decimal">
 <li>Copy and paste the error message and name of function into <strong>Google</strong></li>
 </ol>
-<div id="importantly-for-point-4-always-accredit-the-code-you-use" class="section level3" number="2.6.1">
-<h3 number="2.6.1"><span class="header-section-number">2.6.1</span> Importantly for Point 4, always accredit the code you use</h3>
+<div id="importantly-for-point-4-always-accredit-the-code-you-use" class="section level3" number="2.5.1">
+<h3 number="2.5.1"><span class="header-section-number">2.5.1</span> Importantly for Point 4, always accredit the code you use</h3>
 <p>If you used stackoverflow or any other website use code comments like # or a comment before the code chunk to accredit the webite</p>
 <p>Ex.</p>
 <p>Code from www.helpfulwebsite.fakename.com/user1/howto</p>

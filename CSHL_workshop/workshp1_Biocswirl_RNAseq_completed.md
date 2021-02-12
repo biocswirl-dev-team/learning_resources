@@ -1,7 +1,7 @@
 ---
 title: "CSHL Intro to RNASeq with BiocSwirl Workshop"
 author: "Almas K."
-date: "30/01/2021"
+date: "12/02/2021"
 output:
   html_document:
     keep_md: true
@@ -111,6 +111,15 @@ I recommend using **r markdown files** for all of your analysis scripts.
 In `.rmd` files, code needs to be in code chunks (insert code chunk shortcut is Windows: `ctrl` `+` `alt` `+` `i`, Mac: `cmd` `+` `alt` `+` `i`) in order to run.
 
 
+```r
+2+2
+```
+
+```
+## [1] 4
+```
+
+
 
 In an R markdown you can knit a file into various formats for nice reports.
 
@@ -132,7 +141,7 @@ A few of the basic categories are listed below:
 ```
 
 ```r
-"This is a character" # A character vector
+"This is a character" # A character vector 
 ```
 
 ```
@@ -163,14 +172,14 @@ FALSE # also logical
 ## [1] FALSE
 ```
 
-
+What is the class of this vector?
 
 ```r
-FILL_THIS_IN(3.14)
+class(3.14)
 ```
 
 ```
-## Error in FILL_THIS_IN(3.14): could not find function "FILL_THIS_IN"
+## [1] "numeric"
 ```
 
 What if we wanted to use a value again?
@@ -184,30 +193,19 @@ Use `alt`+ `-` (Windows) or `option`+ `-`(Mac) for the `<-` operator.
 
 ```r
 x <- 1
-y <- FILL_THIS_IN #store multiple values of 1 type
-```
-
-```
-## Error in eval(expr, envir, enclos): object 'FILL_THIS_IN' not found
+y <- c("hi","hello","bonjour") #store multiple values of 1 type
 ```
 
 However, a vector contains only 1 type of data. So if you tried this. What do you think would happen?
 
 
 ```r
-z <- FILL_THIS_IN
-```
-
-```
-## Error in eval(expr, envir, enclos): object 'FILL_THIS_IN' not found
-```
-
-```r
+z <- c("hi",1,TRUE)
 z
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'z' not found
+## [1] "hi"   "1"    "TRUE"
 ```
 
 It coerces the 1 into a character vector.
@@ -216,22 +214,22 @@ Vectors are 1 dimensional and you can look at various properties of a vector lik
 
 
 ```r
-FILL_THIS_IN(y)
+length(y)
 ```
 
 ```
-## Error in FILL_THIS_IN(y): could not find function "FILL_THIS_IN"
+## [1] 3
 ```
 
 To get the second element in a vector you use `[]`
 
 
 ```r
-FILL_THIS_IN
+y[2]
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'FILL_THIS_IN' not found
+## [1] "hello"
 ```
 
 ## Matrix
@@ -242,38 +240,46 @@ Matrix is a common data object in many types of bioinformatic analyses.
 
 
 ```r
-matx <- FILL_THIS_IN(data=1:9,nrow=3,ncol=3)
-```
-
-```
-## Error in FILL_THIS_IN(data = 1:9, nrow = 3, ncol = 3): could not find function "FILL_THIS_IN"
-```
-
-```r
+matx <- matrix(data=1:9,nrow=3,ncol=3)
 matx
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'matx' not found
-```
-
-You can also create a vector like this:
-
-
-```r
-mat2 <- FILL_THIS_IN(y,z)
-```
-
-```
-## Error in FILL_THIS_IN(y, z): could not find function "FILL_THIS_IN"
+##      [,1] [,2] [,3]
+## [1,]    1    4    7
+## [2,]    2    5    8
+## [3,]    3    6    9
 ```
 
 ```r
+maty <- t(matx)
+```
+
+```r
+maty
+```
+
+```
+##      [,1] [,2] [,3]
+## [1,]    1    2    3
+## [2,]    4    5    6
+## [3,]    7    8    9
+```
+
+
+You can also create a matrix like this:
+
+
+```r
+mat2 <- cbind(y,z)
 mat2
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'mat2' not found
+##      y         z     
+## [1,] "hi"      "hi"  
+## [2,] "hello"   "1"   
+## [3,] "bonjour" "TRUE"
 ```
 
 ```r
@@ -281,63 +287,54 @@ class(mat2)
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'mat2' not found
+## [1] "matrix" "array"
 ```
 
 Use [row,column] to access elements of a matrix
-
-
-```r
-matx[FILL_THIS_IN] # Access the 3rd element of the first row
-```
-
-```
-## Error in eval(expr, envir, enclos): object 'matx' not found
-```
+#, 
+,#
 
 ```r
-matx[FILL_THIS_IN] # Access the first row
+matx[1,3] # Access the 3rd element of the first row
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'matx' not found
+## [1] 7
 ```
 
 ```r
-matx[FILL_THIS_IN] # access the first column
+matx[1,] # Access the first row
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'matx' not found
+## [1] 1 4 7
+```
+
+```r
+matx[,1] # access the first column
+```
+
+```
+## [1] 1 2 3
 ```
 
 You can even name the rows and columns of a matrix.
 
 
 ```r
-FILL_THIS_IN(matx) <- c("Earth","Venus","Mars") #name rows
+rownames(matx) <- c("Earth","Venus","Mars") #name rows
+colnames(matx) <- c("j","b","c") # name columns
+colnames(maty) <- rownames(matx)
+maty
 ```
 
 ```
-## Error in FILL_THIS_IN(matx) <- c("Earth", "Venus", "Mars"): object 'matx' not found
+##      Earth Venus Mars
+## [1,]     1     2    3
+## [2,]     4     5    6
+## [3,]     7     8    9
 ```
-
-```r
-FILL_THIS_IN(matx) <- c("A","B","C") # name columns
-```
-
-```
-## Error in FILL_THIS_IN(matx) <- c("A", "B", "C"): object 'matx' not found
-```
-
-```r
-matx
-```
-
-```
-## Error in eval(expr, envir, enclos): object 'matx' not found
-```
-
+t will flip the matrix
 ## Data frames
 
 A data.frame is basically just a table. It has a certain number of rows, and a certain number of columns. It's a special type of data object and various operations can be performed on data frames.
@@ -457,7 +454,7 @@ ToothGrowth
 ## 60 23.0   OJ  2.0
 ```
 
-Here the len is a factor which is a special data type that stores the character vector as a special object behind the scenes.
+Here the supp is a factor which is a special data type that stores the character vector as a special object behind the scenes.
 
 Data Frames, unlike a matrix, can contain many different types of data like dates, characters, numbers.
 
@@ -465,11 +462,13 @@ You can create a dataframe like this.
 
 
 ```r
-FILL_THIS_IN("A"=1:2,B=c("A","B"))
+data.frame("A"=1:2,B=c("A","B"))
 ```
 
 ```
-## Error in FILL_THIS_IN(A = 1:2, B = c("A", "B")): could not find function "FILL_THIS_IN"
+##   A B
+## 1 1 A
+## 2 2 B
 ```
 
 ### Some basic functions to help understand your `data.frame` objects are:
@@ -477,121 +476,234 @@ FILL_THIS_IN("A"=1:2,B=c("A","B"))
 
 ```r
 # number of rows
-FILL_THIS_IN(trees)
+nrow(trees)
 ```
 
 ```
-## Error in FILL_THIS_IN(trees): could not find function "FILL_THIS_IN"
+## [1] 31
 ```
 
 ```r
 # number of columns
-FILL_THIS_IN(trees)
+ncol(trees)
 ```
 
 ```
-## Error in FILL_THIS_IN(trees): could not find function "FILL_THIS_IN"
+## [1] 3
 ```
 
 ```r
 # row x columns
-FILL_THIS_IN(trees)
+dim(trees)
 ```
 
 ```
-## Error in FILL_THIS_IN(trees): could not find function "FILL_THIS_IN"
+## [1] 31  3
 ```
 
 ```r
 # some basic info on the "structure" of the data.frame
-FILL_THIS_IN(trees)
+str(trees)
 ```
 
 ```
-## Error in FILL_THIS_IN(trees): could not find function "FILL_THIS_IN"
+## 'data.frame':	31 obs. of  3 variables:
+##  $ Girth : num  8.3 8.6 8.8 10.5 10.7 10.8 11 11 11.1 11.2 ...
+##  $ Height: num  70 65 63 72 81 83 66 75 80 75 ...
+##  $ Volume: num  10.3 10.3 10.2 16.4 18.8 19.7 15.6 18.2 22.6 19.9 ...
 ```
 
 ```r
 # calculates some summary statistics on each column
-FILL_THIS_IN(trees)
+summary(trees)
 ```
 
 ```
-## Error in FILL_THIS_IN(trees): could not find function "FILL_THIS_IN"
+##      Girth           Height       Volume     
+##  Min.   : 8.30   Min.   :63   Min.   :10.20  
+##  1st Qu.:11.05   1st Qu.:72   1st Qu.:19.40  
+##  Median :12.90   Median :76   Median :24.20  
+##  Mean   :13.25   Mean   :76   Mean   :30.17  
+##  3rd Qu.:15.25   3rd Qu.:80   3rd Qu.:37.30  
+##  Max.   :20.60   Max.   :87   Max.   :77.00
 ```
 
 ```r
 # print first 6 rows
-FILL_THIS_IN(trees)
+head(trees)
 ```
 
 ```
-## Error in FILL_THIS_IN(trees): could not find function "FILL_THIS_IN"
+##   Girth Height Volume
+## 1   8.3     70   10.3
+## 2   8.6     65   10.3
+## 3   8.8     63   10.2
+## 4  10.5     72   16.4
+## 5  10.7     81   18.8
+## 6  10.8     83   19.7
 ```
 
 ```r
 # print last 6 rows
-FILL_THIS_IN(trees)
+tail(trees)
 ```
 
 ```
-## Error in FILL_THIS_IN(trees): could not find function "FILL_THIS_IN"
+##    Girth Height Volume
+## 26  17.3     81   55.4
+## 27  17.5     82   55.7
+## 28  17.9     80   58.3
+## 29  18.0     80   51.5
+## 30  18.0     80   51.0
+## 31  20.6     87   77.0
 ```
 
 ```r
 ## What type of data is trees?
-FILL_THIS_IN(trees) 
+class(trees) 
 ```
 
 ```
-## Error in FILL_THIS_IN(trees): could not find function "FILL_THIS_IN"
+## [1] "data.frame"
 ```
 
 In base R (without additional packages), we can subset the dataframe, similar to how we subset a matrix.
 
+dataframe[r,c]
 
-```r
-treesFILL_THIS_IN # gets the first row
-```
-
-```
-## Error in eval(expr, envir, enclos): object 'treesFILL_THIS_IN' not found
-```
+dataframe[#] column
 
 
 ```r
-treesFILL_THIS_IN ## gets the value of the first column and the first row
+trees[1,] # gets the first row
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'treesFILL_THIS_IN' not found
+##   Girth Height Volume
+## 1   8.3     70   10.3
+```
+
+
+```r
+trees[1,1] ## gets the value of the first column and the first row
+```
+
+```
+## [1] 8.3
 ```
 
 ```r
-treesFILL_THIS_IN # first column, returns a dataframe
+trees[1]# first column, returns a dataframe
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'treesFILL_THIS_IN' not found
+##    Girth
+## 1    8.3
+## 2    8.6
+## 3    8.8
+## 4   10.5
+## 5   10.7
+## 6   10.8
+## 7   11.0
+## 8   11.0
+## 9   11.1
+## 10  11.2
+## 11  11.3
+## 12  11.4
+## 13  11.4
+## 14  11.7
+## 15  12.0
+## 16  12.9
+## 17  12.9
+## 18  13.3
+## 19  13.7
+## 20  13.8
+## 21  14.0
+## 22  14.2
+## 23  14.5
+## 24  16.0
+## 25  16.3
+## 26  17.3
+## 27  17.5
+## 28  17.9
+## 29  18.0
+## 30  18.0
+## 31  20.6
+```
+
+
+```r
+t2 <- trees[1:2]
+class(trees[2])
+```
+
+```
+## [1] "data.frame"
+```
+
+```r
+summary(t2)
+```
+
+```
+##      Girth           Height  
+##  Min.   : 8.30   Min.   :63  
+##  1st Qu.:11.05   1st Qu.:72  
+##  Median :12.90   Median :76  
+##  Mean   :13.25   Mean   :76  
+##  3rd Qu.:15.25   3rd Qu.:80  
+##  Max.   :20.60   Max.   :87
+```
+
+```r
+t2
+```
+
+```
+##    Girth Height
+## 1    8.3     70
+## 2    8.6     65
+## 3    8.8     63
+## 4   10.5     72
+## 5   10.7     81
+## 6   10.8     83
+## 7   11.0     66
+## 8   11.0     75
+## 9   11.1     80
+## 10  11.2     75
+## 11  11.3     79
+## 12  11.4     76
+## 13  11.4     76
+## 14  11.7     69
+## 15  12.0     75
+## 16  12.9     74
+## 17  12.9     85
+## 18  13.3     86
+## 19  13.7     71
+## 20  13.8     64
+## 21  14.0     78
+## 22  14.2     80
+## 23  14.5     74
+## 24  16.0     72
+## 25  16.3     77
+## 26  17.3     81
+## 27  17.5     82
+## 28  17.9     80
+## 29  18.0     80
+## 30  18.0     80
+## 31  20.6     87
 ```
 
 However we can also call the named column using `$`. For example if we wanted the Height column. This will drop the name and return a numeric vector.
 
 
 ```r
-treesFILL_THIS_IN
+t3 <- trees$Height
+class(trees$Height) # checks the class of the height column
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'treesFILL_THIS_IN' not found
-```
-
-```r
-FILL_THIS_IN(treesFILL_THIS_IN) # checks the class of the height column
-```
-
-```
-## Error in FILL_THIS_IN(treesFILL_THIS_IN): could not find function "FILL_THIS_IN"
+## [1] "numeric"
 ```
 
 These differences in subsetting return different objects so think about what output you want.
@@ -604,21 +716,21 @@ See knitted html for pretty tables.
 
 | Operator | Description                       |
 |----------|:----------------------------------|
-| \+       | Add                               |
-| \-       | Subtract                          |
-| \*       | Multiply                          |
+| +       | Add                               |
+| -       | Subtract                          |
+| *       | Multiply                          |
 | /        | Divide                            |
-| \^       | Exponent                          |
+| ^       | Exponent                          |
 | %%       | Modulus (remainder from division) |
 
 **Relational** operators allow us to compare values:
 
 | Operator | Description              |
 |----------|:-------------------------|
-| \<       | Less than                |
-| \>       | Greater than             |
-| \<=      | Less than or equal to    |
-| \>=      | Greater than or equal to |
+| <       | Less than                |
+| >       | Greater than             |
+| <=      | Less than or equal to    |
+| >=      | Greater than or equal to |
 | ==       | Equal to                 |
 | !=       | Not equal to             |
 
@@ -629,9 +741,9 @@ See knitted html for pretty tables.
 | Operator | Description        |
 |----------|:-------------------|
 | !        | Not                |
-| \|       | Or (element_wise)  |
+| |       | Or (element_wise)  |
 | &        | And (element-wise) |
-| \|\|     | Or                 |
+| ||     | Or                 |
 | &&       | And                |
 
 The vector `a` is created for you using the values 1,2,3. Create a second vector `b` with the values 4,6,8
@@ -639,79 +751,132 @@ The vector `a` is created for you using the values 1,2,3. Create a second vector
 
 ```r
 a <- c(1,2,3)
-FILL_THIS_IN
-```
-
-```
-## Error in eval(expr, envir, enclos): object 'FILL_THIS_IN' not found
+b <- c(4,6,8)
 ```
 
 Add and subtract the 2 vectors. Try another arithmetic operation from the list above.
 
 
 ```r
-FILL_THIS_IN
+a+b
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'FILL_THIS_IN' not found
+## [1]  5  8 11
 ```
 
 ```r
-FILL_THIS_IN
+a-b
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'FILL_THIS_IN' not found
+## [1] -3 -4 -5
+```
+
+```r
+a*b
+```
+
+```
+## [1]  4 12 24
 ```
 
 How would you check if 5 is greater than 7? How would you check if 5+2 is the same as 2+5
 
 
 ```r
-FILL_THIS_IN
+5>7
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'FILL_THIS_IN' not found
-```
-
-```r
-FILL_THIS_IN
-```
-
-```
-## Error in eval(expr, envir, enclos): object 'FILL_THIS_IN' not found
-```
-
-Let's bind a and b into a matrix called c.
-
-
-```r
-c <- FILL_THIS_IN
-```
-
-```
-## Error in eval(expr, envir, enclos): object 'FILL_THIS_IN' not found
-```
-
-How would you do the following
-
-
-```r
-FILL_THIS_IN ## select elements greater than 3
-```
-
-```
-## Error in eval(expr, envir, enclos): object 'FILL_THIS_IN' not found
+## [1] FALSE
 ```
 
 ```r
-FILL_THIS_IN ## select elements greater than 3 or equal to 1 
+(5+2)==(2+5)
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'FILL_THIS_IN' not found
+## [1] TRUE
+```
+
+Let's bind a and b into a matrix called d.
+
+
+```r
+d <- cbind(a,b)
+d
+```
+
+```
+##      a b
+## [1,] 1 4
+## [2,] 2 6
+## [3,] 3 8
+```
+
+How would you do the following?
+Within d 
+
+d[logical operator]
+
+
+```r
+d[d>3] ## select elements greater than 3
+```
+
+```
+## [1] 4 6 8
+```
+
+```r
+d[d>3|d==1] ## select elements greater than 3 or equal to 1
+```
+
+```
+## [1] 1 4 6 8
+```
+
+```r
+d[!(d>3)]
+```
+
+```
+## [1] 1 2 3
+```
+
+```r
+d[d>3&d>4] ## && checks the entire thing whether meets the condition
+```
+
+```
+## [1] 6 8
+```
+
+```r
+rbind(y,z) # r binds rows
+```
+
+```
+##   [,1] [,2]    [,3]     
+## y "hi" "hello" "bonjour"
+## z "hi" "1"     "TRUE"
+```
+
+```r
+cbind(y,z) # c binds columns
+```
+
+```
+##      y         z     
+## [1,] "hi"      "hi"  
+## [2,] "hello"   "1"   
+## [3,] "bonjour" "TRUE"
+```
+
+```r
+rnaseq_dat <- y
+mat_norm <- z
 ```
 
 ## Where to get help?
