@@ -256,8 +256,17 @@ matx
 ```
 ## Error in eval(expr, envir, enclos): object 'matx' not found
 ```
+How to flip this matrix:
 
-You can also create a vector like this:
+
+```r
+FILL_THIS_IN(matx)
+```
+
+```
+## Error in FILL_THIS_IN(matx): could not find function "FILL_THIS_IN"
+```
+You can also create a matrix like this:
 
 
 ```r
@@ -684,11 +693,11 @@ FILL_THIS_IN
 ## Error in eval(expr, envir, enclos): object 'FILL_THIS_IN' not found
 ```
 
-Let's bind a and b into a matrix called c.
+Let's bind a and b into a matrix called d.
 
 
 ```r
-c <- FILL_THIS_IN
+d <- FILL_THIS_IN
 ```
 
 ```
@@ -773,13 +782,16 @@ The BiocSwirl interactive course was based on [this RNA-seq workflow](https://ma
 ![RNAseq workflow image](https://raw.githubusercontent.com/biocswirl-dev-team/learning_resources/workshop_cshl/CSHL_workshop/RNAseq.jpg)
 
 ### Steps of the workflow
+Feel free to take notes on the different steps as you work your way through the RNAseq workflow.
+#### Live demo
 
-Feel free to take notes on the different steps as you work your way through the RNAseq workflow course.
 
 -   Installation of packages:
--   Intro to the biology of RNAseq:
 -   fastq download:
 -   fastq trimming:
+
+#### Interactive Course
+
 -   Read alignment & quantification:
 -   Pre-processing:
 -   Principle Component Analysis:
@@ -815,14 +827,14 @@ Below is a list of tools that are used within the workflow. If available, each t
 
 ```r
 # installation of devtools
-install.packages("devtools")
-library(devtools)
+install.packages("FILL_THIS_IN")
+FILL_THIS_IN(devtools)
 # installation of biocswirl with vignettes
 devtools::install_github("biocswirl-dev-team/BiocSwirl", build_vignettes = TRUE)
 # load Biocswirl library
-library(BiocSwirl)
+library(FILL_THIS_IN)
 # load swirl
-library(swirl)
+library(FILL_THIS_IN)
 ```
 
 
@@ -830,7 +842,7 @@ library(swirl)
 # list all available courses
 list_courses()
 # select the RNAseq course for installation
-load_course('RNAseq')
+FILL_THIS_IN('RNAseq')
 # start the BiocSwirl course environment
 start_course()
 ```

@@ -252,7 +252,21 @@ matx
 ## [3,]    3    6    9
 ```
 
-You can also create a vector like this: 
+How to flip this matrix:
+
+
+```r
+t(matx)
+```
+
+```
+##      [,1] [,2] [,3]
+## [1,]    1    2    3
+## [2,]    4    5    6
+## [3,]    7    8    9
+```
+
+You can also create a matrix like this: 
 
 ```r
 mat2 <- cbind(y,z)
@@ -719,16 +733,16 @@ How would you check if 5 is greater than 7? How would you check if 5+2 is the sa
 ## [1] TRUE
 ```
 
-Let's bind a and b into a matrix called c. 
+Let's bind a and b into a matrix called d. 
 
 ```r
-c <- cbind(a,b)
+d <- cbind(a,b)
 ```
 
 How would you do the following 
 
 ```r
-c[c>3] ## select elements greater than 3
+d[d>3] ## select elements greater than 3
 ```
 
 ```
@@ -736,7 +750,7 @@ c[c>3] ## select elements greater than 3
 ```
 
 ```r
-c[c>3|c==1] ## select elements greater than 3 or equal to 1 
+d[d>3|d==1] ## select elements greater than 3 or equal to 1 
 ```
 
 ```
