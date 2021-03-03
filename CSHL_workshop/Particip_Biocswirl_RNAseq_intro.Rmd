@@ -184,8 +184,12 @@ Matrix is a common data object in many types of bioinformatic analyses.
 matx <- FILL_THIS_IN(data=1:9,nrow=3,ncol=3)
 matx
 ```
+How to flip this matrix:
 
-You can also create a vector like this:
+```{r}
+FILL_THIS_IN(matx)
+```
+You can also create a matrix like this:
 
 ```{r}
 mat2 <- FILL_THIS_IN(y,z)
@@ -337,10 +341,10 @@ FILL_THIS_IN
 FILL_THIS_IN
 ```
 
-Let's bind a and b into a matrix called c.
+Let's bind a and b into a matrix called d.
 
 ```{r}
-c <- FILL_THIS_IN
+d <- FILL_THIS_IN
 ```
 
 How would you do the following
