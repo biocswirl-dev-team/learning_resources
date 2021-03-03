@@ -404,13 +404,16 @@ The BiocSwirl interactive course was based on [this RNA-seq workflow](https://ma
 ![RNAseq workflow image](https://raw.githubusercontent.com/biocswirl-dev-team/learning_resources/workshop_cshl/CSHL_workshop/RNAseq.jpg)
 
 ### Steps of the workflow
+Feel free to take notes on the different steps as you work your way through the RNAseq workflow.
+#### Live demo
 
-Feel free to take notes on the different steps as you work your way through the RNAseq workflow course.
 
 -   Installation of packages:
--   Intro to the biology of RNAseq:
 -   fastq download:
 -   fastq trimming:
+
+#### Interactive Course
+
 -   Read alignment & quantification:
 -   Pre-processing:
 -   Principle Component Analysis:
@@ -445,21 +448,21 @@ Below is a list of tools that are used within the workflow. If available, each t
 
 ```{r, eval = FALSE}
 # installation of devtools
-install.packages("devtools")
-library(devtools)
+install.packages("FILL_THIS_IN")
+FILL_THIS_IN(devtools)
 # installation of biocswirl with vignettes
 devtools::install_github("biocswirl-dev-team/BiocSwirl", build_vignettes = TRUE)
 # load Biocswirl library
-library(BiocSwirl)
+library(FILL_THIS_IN)
 # load swirl
-library(swirl)
+library(FILL_THIS_IN)
 ```
 
 ```{r, eval = FALSE}
 # list all available courses
 list_courses()
 # select the RNAseq course for installation
-load_course('RNAseq')
+FILL_THIS_IN('RNAseq')
 # start the BiocSwirl course environment
 start_course()
 ```
