@@ -1,0 +1,328 @@
+---
+title: "RNAseq_workflow"
+author: "juphilip"
+date: "2/21/2021"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+## Installing_packages
+
+Packages from CRAN (The Comprehensive R Archive Network) can be downloaded using the function install.packages(). Within the parenthesis of the function, as a parameter, type the name of the package you would like to install in double quotation marks.
+```{r install packages from CRAN, eval=FALSE}
+install.packages("pheatmap")
+```
+
+The Bioconductor project uses a different installer/manager for their packages
+```{r install BiocManager, eval=FALSE}
+install.packages("BiocManager")
+# this might take a moment and lead to some prompts opening in the console
+# now that BiocManager is installed, Bioconductor packages can be installed.
+BiocManager::install("DESeq2")
+```
+
+```{r loading packages, eval=FALSE}
+library(pheatmap)
+library(DESeq2)
+```
+
+```{r additional information from packages, eval=FALSE}
+# browse package documentation
+browseVignettes("DESeq2")
+
+# access the citation information of a package
+citation("DESeq2")
+```
+
+
+## Introduction
+[Link to the workflow here](https://bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html)
+
+Bulk RNA-seq is a method to quantify the global gene expression in a cell population of interest
+
+
+## fastq_download
+
+Fastq files are very similar to fasta files, which are used to store multiple sequences in one file. Similarly fastq files store the raw sequences of the reads, but they additionally store quality information.
+
+Fastq files are often deposited online when RNAseq analysis data is published.
+
+The GEO (Gene Expression Omnibus) usually holds all the information of these published datasets. [Link for covid dataset](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE147507)
+
+The Fastq files themselves can be seen at the SRA (Sequence Read Archive). More meta information there as well.
+(When on the GEO page for the paper we are looking at, look for the link SRA run selector) [Link to SRA run selector](https://www.ncbi.nlm.nih.gov/Traces/study/?acc=PRJNA615032)
+
+There are filters for cell line -> filter for nhbe -> 24 total runs
+
+Files CANNOT be downloaded from there , but need to be downloaded with a commandline tool (and command) called [SRA toolkit](https://github.com/ncbi/sra-tools/wiki/02.-Installing-SRA-Toolkit)
+
+Command line command for downloading fastq files - fastq-dump [accession number]
+
+Command line command for looking at fastq files - zless [filename] -> this is recommended because it can look at compressed files as well. To make it less overwhelming, we can look at the files with zlesss [filename] | head
+to only look at the top couple of lines
+
+Where the files are?
+need to figure out where with get_course_path function
+this might be easier to show
+
+### What do these files look like?
+zlesss [filename] | head
+4 lines per read / entry
+a header with an ID
+then the base sequence
+a spacer (+)
+then the quality string made of ASCII characters that represent the quality of each base
+[Website that explains the quality symbols](https://www.drive5.com/usearch/manual/quality_score.html)
+
+
+
+## fastq_trimming
+Quality assessment with [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+
+This is a commmandline tool and will have to be installed - very useful, highly recommend
+commandline command for fastqc - "fastqc -f fastq SRR11412215.chr20.fq.gz"
+
+Look at the report!
+
+Sometimes, quality report shows low quality at the end of the reads and they might have to get trimmed.
+for that recommend [trim galore](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/) will work with FastQC results. Since we're using publicly available data, that won't be necessary.
+
+## Read_alignment_quantification
+
+Read alignment -> reads mapping to the genome - highly recommend the tool STAR, which alignes reads to the (human) genome.
+this will result in SAM (sequence alignment map) or bam files (binary version of sam)
+
+### sam and bam files
+SHOW AN EXAMPLE
+will need software samtools
+samtools view filename | head
+much information here -> not all is super clear and easy to find information about it -> important position of where this read maps, then a mapping quality string thats -10 log10(number of wrong mapping positions), then CIGAR string which is interesting [link](https://en.wikipedia.org/wiki/Sequence_alignment#Representations)
+
+### quantification
+```{r use Rsubreads package, eval=FALSE}
+BiocManager::install("Rsubread")
+library(Rsubread)
+
+bamfile <- "/path/to/bamfile"
+#bamfile <- "/Library/Frameworks/R.framework/Versions/4.0/Resources/library/swirl/Courses/BiocSwirl_RNAseq/Read_alignment_quantification/SRR11412215_Aligned.sortedByCoord.out.bam"
+counts <- featureCounts(bamfile, annot.inbuilt = "hg38")
+```
+
+
+### transcriptome level quantification
+Alternatively, we can quantify on transcriptome level
+usually quicker, allows normalization, ...
+example tools: salmon, sailfish, kallisto
+their output can be imported with the tximport package
+
+```{r tximport, eval=FALSE}
+BiocManager::install("tximport")
+library(tximport)
+
+salmon.files <- "/path/to/file"
+#salmon.files <- "/Library/Frameworks/R.framework/Versions/4.0/Resources/library/swirl/Courses/BiocSwirl_RNAseq/Read_alignment_quantification/SRR11412215/quant.genes.sf"
+txi <- tximport(salmon.files, type = "salmon", txOut=T)
+```
+
+At this point you have downloaded fastq files, assessed their quality, mapped them to the genome/ transcriptome and collected read counts per gene. Now you're ready for hands on data analysis in R.
+
+## Gene_Count_Pre-Processing
+
+```{r make colData with exp info, eval=FALSE}
+# OG DATASET
+# can be skipped
+dataset <- data.frame(read.table("~/Documents/09_BiocSwirl/BiocSwirl_RNAseq/Gene_Count_Pre-Processing/GSE147507_RawReadCounts_Human_subset.tsv",
+                      header = TRUE, stringsAsFactors = FALSE))
+
+colData <- data.frame(names = colnames(dataset), 
+                      condition = c("mock","mock","mock","treatment","treatment","treatment"))
+
+colData
+
+library(RColorBrewer)
+colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
+```
+
+```{r colData and co with pasilla}
+library(pasilla)
+pasCts <- system.file("extdata",
+                      "pasilla_gene_counts.tsv",
+                      package="pasilla", mustWork=TRUE)
+
+pasAnno <- system.file("extdata",
+                       "pasilla_sample_annotation.csv",
+                       package="pasilla", mustWork=TRUE)
+
+dataset <- as.matrix(read.csv(pasCts,sep="\t",row.names="gene_id"))
+colData <- read.csv(pasAnno, row.names=1)
+
+colData <- colData[,c("condition","type")]
+colData$condition <- factor(colData$condition)
+colData$type <- factor(colData$type)
+
+colData
+
+library(RColorBrewer)
+colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
+```
+
+```{r gene names}
+#flybase annotation
+# BiocManager::install()
+library("AnnotationDbi")
+#BiocManager::install("org.Dm.eg.db")
+library("org.Dm.eg.db")
+
+ids <- data.frame(id = rownames(dataset))
+ids$symbol <- mapIds(org.Dm.eg.db, 
+                    keys=ids$id, 
+                    column="SYMBOL", 
+                    keytype="FLYBASE",
+                    multiVals="first")
+```
+
+```{r deseq pre steps, eval=FALSE}
+#BiocManager::install("DESeq2)
+#library(DESeq2)
+dds <- DESeqDataSetFromMatrix(dataset, colData, design= ~ condition)
+
+head(assay(dds))
+
+#filtering
+keep <- rowSums(counts(dds)) > 1
+
+#subsetting
+dds <- dds[keep,]
+
+# rlog transformation
+rlog_dds <- rlog(dds)
+
+```
+
+### some notes on rlog
+
+```{r rlog plot, eval=FALSE}
+library(dplyr)
+library(ggplot2)
+library(cowplot)
+df <- bind_rows(
+  data.frame((counts(dds, normalized=FALSE))[,1:2]) %>% mutate(transformation ="raw"),
+  data.frame(assay(rlog_dds)[, 1:2]) %>% mutate(transformation = "rlog"))
+colnames(df)[1:2] <- c("x", "y")  
+lvls <- c("raw", "rlog")
+df$transformation <- factor(df$transformation, levels=lvls)
+
+plot1 <- ggplot((subset(df, transformation == "raw")), aes(x=x, y=y)) +
+  geom_hex(bins = 80) +
+  ggtitle("raw counts")
+
+plot2 <- ggplot(subset(df, transformation == "rlog"), aes(x=x, y=y)) +
+  geom_hex(bins = 80) + 
+  ggtitle("rlog transformed counts")
+
+print(plot_grid(plot1, plot2))
+```
+
+## PCA
+
+```{r PCA, eval=FALSE}
+sampleDist <- dist(t(assay(rlog_dds)))
+
+sampleDistMatrix <- as.matrix(sampleDist)
+
+rownames(sampleDistMatrix) <- dds$condition
+
+pheatmap(sampleDistMatrix, clustering_distance_rows = sampleDist, clustering_distance_cols = sampleDist, col = colors)
+
+plotPCA(rlog_dds)
+```
+
+## DESeq2
+
+```{r actual deseq, eval=FALSE}
+res_dds <- DESeq(dds)
+
+res <- results(res_dds)
+
+head(res)
+
+mcols(res)
+
+summary(res)
+
+res_sig <- subset(res, padj < 0.1)
+
+head(res_sig[order(res_sig$log2FoldChange),])
+
+head(res_sig[order(res_sig$log2FoldChange, decreasing=TRUE),])
+```
+
+## Examine_DESEq2_results
+```{r examine, eval=FALSE}
+hist(res$pvalue[res$baseMean > 1])
+
+#plotCounts(dds, gene = "IL6")
+plotCounts(dds, gene = "FBgn0000017")
+
+#res_shrink <- lfcShrink(res_dds, coef="condition_treatment_vs_mock", type="apeglm")
+res_shrink <- lfcShrink(res_dds, coef="condition_untreated_vs_treated", type="apeglm")
+
+# MA plot
+plotMA(res_shrink, ylim=c(-5,5))
+
+#volcano plot
+plot(x=res$log2FoldChange, y=-log2(res$padj))
+
+plot(x=res$log2FoldChange, y=-log2(res$padj), xlab="log2FoldChange", ylab="-log2(adjusted p-value)", pch=16)
+abline(h=0.1)
+abline(v=c(-1,1))
+
+test_gene_data <- res_sig[order(res_sig$log2FoldChange, decreasing=TRUE),][1,]
+
+points(test_gene_data$log2FoldChange, -log2(test_gene_data$padj), col = "red", pch = 16)
+legend("topleft",c("test_gene"), fill = c("red"))
+
+
+
+```
+
+## Pathway_Analysis
+```{r enrichr, eval=FALSE}
+topGenes <- head(res_sig[order(res_sig$log2FoldChange, decreasing=TRUE),], 20)
+
+# translate flybase ids into gene symbols
+rownames(topGenes)
+
+topGenes_symbols <- ids[ids$id %in% rownames(topGenes),"symbol"]
+
+cat(na.omit(topGenes_symbols), sep = "\n")
+```
+
+go to https://amp.pharm.mssm.edu/Enrichr/
+try out this analysis
+
+## save_and_export
+```{r save, eval=FALSE}
+#save.image()
+#write.table()
+
+```
+
+
+```{r get course data}
+
+.get_course_path <- function(){
+  tryCatch(swirl:::swirl_courses_dir(),
+           error = function(c) {file.path(find.package("swirl"),"Courses")}
+  )
+}
+
+load(file.path(.get_course_path(), "BiocSwirl_RNAseq", "Examine_DESEq2_results","IL6_data.RData"))
+load(file.path(.get_course_path(), "BiocSwirl_RNAseq", "Examine_DESEq2_results","topGenes.RData"))
+
+
+```
+

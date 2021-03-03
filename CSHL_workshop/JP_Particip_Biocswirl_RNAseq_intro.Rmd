@@ -14,7 +14,7 @@ output:
     theme: paper
     self_contained: yes
 editor_options: 
-  chunk_output_type: inline
+  chunk_output_type: console
 ---
 
 ## Accreditation
@@ -81,7 +81,7 @@ knitr::opts_chunk$set(error = TRUE)
 
 -   Common R operations
 
--   Where to get help
+-   What do you do if get stuck?
 
 -   Accrediting code
 
@@ -128,7 +128,7 @@ A few of the basic categories are listed below:
 
 ```{r}
 3.14 # This is a numeric vector
-"This is a character" # A character vector
+"This is a character" # A character vecotr
 "3.14" # This is also a character vector
 TRUE # logical vector
 FALSE # also logical
@@ -176,7 +176,7 @@ FILL_THIS_IN
 
 ## Matrix
 
-Multiple objects are stored in a matrix. Like a vector, a matrix only contains 1 type of data, but it has more than 1 dimension.
+Multiple objects are stored in a matrix. A matrix like a vector only contains 1 type of data, but it has more than 1 dimension.
 
 Matrix is a common data object in many types of bioinformatic analyses.
 
@@ -196,7 +196,7 @@ class(mat2)
 Use [row,column] to access elements of a matrix
 
 ```{r}
-matx[FILL_THIS_IN] # Access the 3rd element of the first row
+matx[FILL_THIS_IN] # Access the 3th element of the first row
 matx[FILL_THIS_IN] # Access the first row
 matx[FILL_THIS_IN] # access the first column
 ```
@@ -211,7 +211,7 @@ matx
 
 ## Data frames
 
-A data.frame is basically just a table. It has a certain number of rows, and a certain number of columns. It's a special type of data object and various operations can be performed on data frames.
+A data.frame is basically just a table, it has a certain number of rows, and a certain number of columns. Its a special type of data object and various operations can be performed on data frames.
 
 "trees" is a built-in dataset in R available as a `data.frame`.
 
@@ -229,7 +229,7 @@ ToothGrowth
 
 Here the len is a factor which is a special data type that stores the character vector as a special object behind the scenes.
 
-Data Frames, unlike a matrix, can contain many different types of data like dates, characters, numbers.
+Data Frames unlike a matrix can contain many different types of data like dates, characters, numbers.
 
 You can create a dataframe like this.
 
@@ -352,7 +352,7 @@ FILL_THIS_IN ## select elements greater than 3 or equal to 1
 
 ## Where to get help?
 
-R like any language can be confusing at times. It's okay if you get stuck.
+R like any language can be confusing at times. Its okay if you get stuck.
 
 If you are confused about how to do something or what to do next follow these steps below:
 
@@ -362,7 +362,7 @@ If you are confused about how to do something or what to do next follow these st
 
 -   Check the inputs the function needs (a `data.frame` vs a `matrix`)
 
-4.  Copy and paste the error message and name of function into **Google**
+4.  Copy and paste the error message and name of function into **Google**?
 
 ### Importantly for Point 4, always accredit the code you use
 
@@ -375,6 +375,7 @@ Code from www.helpfulwebsite.fakename.com/user1/howto
 ```{r}
 1+1 #www.helpfulwebsite.fakename.com/user1/howto
 ```
+
 
 # Introduction to RNAseq data analysis
 
@@ -404,16 +405,13 @@ The BiocSwirl interactive course was based on [this RNA-seq workflow](https://ma
 ![RNAseq workflow image](https://raw.githubusercontent.com/biocswirl-dev-team/learning_resources/workshop_cshl/CSHL_workshop/RNAseq.jpg)
 
 ### Steps of the workflow
-Feel free to take notes on the different steps as you work your way through the RNAseq workflow.
-#### Live demo
 
+Feel free to take notes on the different steps as you work your way through the RNAseq workflow course.
 
 -   Installation of packages:
+-   Intro to the biology of RNAseq:
 -   fastq download:
 -   fastq trimming:
-
-#### Interactive Course
-
 -   Read alignment & quantification:
 -   Pre-processing:
 -   Principle Component Analysis:
@@ -448,21 +446,21 @@ Below is a list of tools that are used within the workflow. If available, each t
 
 ```{r, eval = FALSE}
 # installation of devtools
-install.packages("FILL_THIS_IN")
-FILL_THIS_IN(devtools)
+install.packages("devtools")
+library(devtools)
 # installation of biocswirl with vignettes
 devtools::install_github("biocswirl-dev-team/BiocSwirl", build_vignettes = TRUE)
 # load Biocswirl library
-library(FILL_THIS_IN)
+library(BiocSwirl)
 # load swirl
-library(FILL_THIS_IN)
+library(swirl)
 ```
 
 ```{r, eval = FALSE}
 # list all available courses
 list_courses()
 # select the RNAseq course for installation
-FILL_THIS_IN('RNAseq')
+load_course('RNAseq')
 # start the BiocSwirl course environment
 start_course()
 ```

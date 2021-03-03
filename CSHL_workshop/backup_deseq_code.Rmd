@@ -1,0 +1,47 @@
+---
+title: "Untitled"
+author: "juphilip"
+date: "2/12/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+BiocManager::install("pasilla")
+
+```
+
+```{r load files starting at count matrix}
+pasCts <- system.file("extdata",
+                      "pasilla_gene_counts.tsv",
+                      package="pasilla", mustWork=TRUE)
+pasAnno <- system.file("extdata",
+                       "pasilla_sample_annotation.csv",
+                       package="pasilla", mustWork=TRUE)
+
+cts <- as.matrix(read.csv(pasCts,sep="\t",row.names="gene_id"))
+coldata <- read.csv(pasAnno, row.names=1)
+
+
+coldata <- coldata[,c("condition","type")]
+coldata$condition <- factor(coldata$condition)
+coldata$type <- factor(coldata$type)
+
+```
+
+```{r DESeq2}
+dds <- DESeqDataSetFromMatrix(cts, colData = coldata, design = ~ condition)
+
+res_dds <- DESeq(dds)
+results(res_dds)
+# filter for events with an adjusted pvalue smaller than 0.1
+res_sig <- subset(res, padj < 0.1)
+
+# filter for events with a log2FoldChage bigger than 1
+res_sig <- subset(res_sig, log2FoldChange > 1)
+
+# visualize read counts
+plotCounts(dds, gene = "FBgn0000017")
+
+plot(x=res$log2FoldChange, y=-log2(res$padj))
+```
+
