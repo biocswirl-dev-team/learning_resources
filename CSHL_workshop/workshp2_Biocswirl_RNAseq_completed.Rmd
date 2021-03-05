@@ -1,0 +1,497 @@
+---
+title: "CSHL Intro to RNASeq with BiocSwirl Workshop Workshop 2"
+author: "Almas K."
+date: "5/03/2021"
+output:
+  html_document:
+    keep_md: true
+    toc: true
+    toc_depth: 3
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+    number_sections:  true
+    theme: paper
+    self_contained: yes
+editor_options: 
+  chunk_output_type: inline
+---
+
+## Accreditation
+
+Adapted from the following resources:
+
+-   [Data Wrangling workshop](https://github.com/BCCHR-trainee-omics-group/StudyGroup/tree/master/workshops/2020-07-23_data_wrangling_ak) for the BC Children's Trainee Omics Group (TOG) by Almas Khan
+-   Also Adapted from Tutorials of Victor Yuan for the BC Children's TOG.
+-   [Perdue's Intro to R](https://www.stat.purdue.edu/bigtap/online/docs/Introduction_to_R_and_Bioconductor.html)
+-   [DataMentor.io R tutorial](https://www.datamentor.io/r-programming/matrix/)
+
+## About
+
+-   Authors of this script: Almas Khan and Julia Philipp
+
+## Setup
+
+-   Please have the latest version of R and Rstudio installed.
+
+# Overall Learning outcomes
+
+-   Knowledge of R and Bioconductor
+
+-   Knowledge of basic R data types
+
+-   Differentiate a matrix and data.frame
+
+-   Understanding how to :
+
+    -   Assign variables
+    -   Run built in operations in R
+    -   Subset on a data.frame and matrix
+
+<!---The following chunk allows errors when knitting--->
+
+```{r allow errors, echo = FALSE}
+knitr::opts_chunk$set(error = TRUE)
+```
+
+## Additional Resources:
+
+-   [R Swirl](https://swirlstats.com/) for interactive lesson on programming with R
+-   [R for data science](http://r4ds.had.co.nz/) : A comprehensive introductory ebook on R.
+-   [Learnr package](https://rstudio.github.io/learnr/) another interactive lesson within R on programming
+
+## Topics
+
+### Part 1: Intro to R:
+
+**What is R ?**
+
+-   What is R markdown?
+
+-   What are vectors and `matrix` objects?
+
+    -   Basic data types
+    -   Basic functions for matrices
+
+-   `data.frame`
+
+    -   Basic functions for exploring dataframes
+
+    -   Indexing and Subsetting
+
+-   Common R operations
+
+-   Where to get help
+
+-   Accrediting code
+
+### Part 2: Bioconductor and RNAseq
+
+**What is Bioconductor?**
+
+-   Introduction
+
+**What is BiocSwirl**
+
+-   Introduction
+-   Notes and topics
+
+# Part 1: Intro to R
+
+## What is R and what is R markdown?
+
+-   R is an open sourced statistical programming language based on an older proprietary language known as S.
+
+-   R contains various add ons known as packages. Think of these like additional apps on that you download on top of the base apps you get on your phone.
+
+-   We will go over the basics of syntax within R.
+
+But first, let's talk about the document we are currently working in. Think of it as a like a notebook for your code that includes comments and I find it's easier to keep track of your analysis.
+
+I recommend using **r markdown files** for all of your analysis scripts.
+
+In `.rmd` files, code needs to be in code chunks (insert code chunk shortcut is Windows: `ctrl` `+` `alt` `+` `i`, Mac: `cmd` `+` `alt` `+` `i`) in order to run.
+
+```{r}
+
+```
+
+```{r}
+2+2
+```
+
+In an R markdown you can knit a file into various formats for nice reports.
+
+## Data Types: Vector
+
+In R, the basic data structure is known as a vector. Vectors are divided into various categories.
+
+A few of the basic categories are listed below:
+
+ Use Windows: `ctrl` `+`enter`, Mac:`cmd` + `enter` to run a single line of the code chunk. If there is multiple lines of code you can run the entire chunk using the play button (green triangle) on the code chunk. 
+
+```{r}
+3.14 # This is a numeric vector
+"This is a character" # A character vector
+"3.14" # This is also a character vector
+TRUE # logical vector
+FALSE # also logical
+```
+
+
+```{r}
+class(3.14)
+```
+
+What if we wanted to use a value again?
+
+We can store it as an object.
+
+An object is assigned through the `<-`operator. A vector can have more than 1 object.
+
+Use `alt`+ `-` (Windows) or `option`+ `-`(Mac) for the `<-` operator.
+
+```{r}
+x <- 1
+y <- c("hello","hi","bonjour") #store multiple values of 1 type
+y
+```
+
+However, a vector contains only 1 type of data. So if you tried this. What do you think would happen?
+
+```{r}
+z <- c("hi",1,TRUE)
+z
+```
+
+It coerces the 1 into a character vector.
+
+Vectors are 1 dimensional and you can look at various properties of a vector like length.
+
+```{r}
+length(y)
+```
+
+To get the second element in a vector you use `[]`
+
+```{r}
+y[2]
+```
+
+## Matrix
+
+Multiple objects are stored in a matrix. Like a vector, a matrix only contains 1 type of data, but it has more than 1 dimension.
+
+Matrix is a common data object in many types of bioinformatic analyses.
+
+```{r}
+matx <- matrix(data=1:9,nrow=3,ncol=3)
+matx
+```
+How to flip this matrix:
+
+```{r}
+t(matx)
+```
+You can also create a matrix like this:
+
+```{r}
+mat2 <- cbind(y,z)
+mat2
+class(mat2)
+rbind(y,z)
+```
+
+Use [row,column] to access elements of a matrix
+
+```{r}
+matx[1,3] # Access the 3rd element of the first row
+matx[1,] # Access the first row
+matx[,1] # access the first column
+```
+
+You can even name the rows and columns of a matrix.
+
+```{r}
+rownames(matx) <- c("Earth","Venus","Mars") #name rows
+colnames(matx) <- c("A","B","C") # name columns
+matx
+```
+
+## Data frames
+
+A data.frame is basically just a table. It has a certain number of rows, and a certain number of columns. It's a special type of data object and various operations can be performed on data frames.
+
+"trees" is a built-in dataset in R available as a `data.frame`.
+
+```{r}
+trees
+```
+
+The columns of the trees `data.frame` object are individual `vector` objects. So trees has 3 columns/vectors that are each 31 elements long. The dbl is just a type of numeric class of data.
+
+Another Example of a data.frame. The ToothGrowth dataset looking at hamster teeth grown with different supplements and doses of Vitamin C.
+
+```{r}
+ToothGrowth
+```
+
+Here the len is a factor which is a special data type that stores the character vector as a special object behind the scenes.
+
+Data Frames, unlike a matrix, can contain many different types of data like dates, characters, numbers.
+
+You can create a dataframe like this.
+
+```{r}
+data.frame("A"=1:2,B=c("A","B"))
+```
+
+### Some basic functions to help understand your `data.frame` objects are:
+
+```{r,error=TRUE}
+# number of rows
+nrow(trees)
+# number of columns
+ncol(trees)
+# row x columns
+dim(trees)
+# some basic info on the "structure" of the data.frame
+str(trees)
+# calculates some summary statistics on each column
+summary(trees)
+# print first 6 rows
+head(trees)
+# print last 6 rows
+tail(trees)
+## What type of data is trees?
+class(trees) 
+```
+
+In base R (without additional packages), we can subset the dataframe, similar to how we subset a matrix.
+
+```{r}
+trees[1,] # gets the first row
+```
+
+```{r}
+trees[1,1] ## gets the value of the first column and the first row
+trees[1] # first column, returns a dataframe, formally subsetting a dataframe
+trees[,1] # first column, returns just numbers (vectors)
+trees[1,] #first row ,dataframe
+```
+
+However we can also call the named column using `$`. For example if we wanted the Height column. This will drop the name and return a numeric vector.
+
+```{r}
+trees$Height
+class(trees$Height) # checks the class of the height column
+```
+
+These differences in subsetting return different objects so think about what output you want.
+
+## Basic operations in R
+
+See knitted html for pretty tables.
+
+**Arithmetic** operators allow us to carry out mathematical operations:
+
+| Operator | Description                       |
+|----------|:----------------------------------|
+| \+       | Add                               |
+| \-       | Subtract                          |
+| \*       | Multiply                          |
+| /        | Divide                            |
+| \^       | Exponent                          |
+| %%       | Modulus (remainder from division) |
+
+**Relational** operators allow us to compare values:
+
+| Operator | Description              |
+|----------|:-------------------------|
+| \<       | Less than                |
+| \>       | Greater than             |
+| \<=      | Less than or equal to    |
+| \>=      | Greater than or equal to |
+| ==       | Equal to                 |
+| !=       | Not equal to             |
+
+-   Arithmetic and relational operators work on vectors.
+
+**Logical** operators allow us to carry out boolean operations:
+
+| Operator | Description        |
+|----------|:-------------------|
+| !        | Not                |
+| \|       | Or (element_wise)  |
+| &        | And (element-wise) |
+| \|\|     | Or                 |
+| &&       | And                |
+
+The vector `a` is created for you using the values 1,2,3. Create a second vector `b` with the values 4,6,8
+
+```{r}
+a <- c(1,2,3)
+b <- c(4,6,8)
+```
+
+Add and subtract the 2 vectors. Try another arithmetic operation from the list above.
+
+```{r}
+a+b
+a-b
+a*b
+b-a
+```
+
+How would you check if 5 is greater than 7? How would you check if 5+2 is the same as 2+5
+
+```{r}
+5>7
+5+2==2+5
+```
+
+Let's bind a and b into a matrix called d.
+
+```{r}
+d <- cbind(a,b)
+d
+```
+
+How would you do the following
+
+```{r}
+d[d>3] ## select elements greater than 3
+d[d>3|d==1] ## select elements greater than 3 or equal to 1 
+```
+
+## Where to get help?
+
+R like any language can be confusing at times. It's okay if you get stuck.
+
+If you are confused about how to do something or what to do next follow these steps below:
+
+1.  Read the error message (if there is one). Error messages often times help convey what you might have missed.
+2.  Check your code for simple mistakes. Did you miss a bracket or quotation mark, did you misspell an object name or use `=` instead of `==`?
+3.  Read the function documentation. Use the `?` command to pull up the help page.
+
+-   Check the inputs the function needs (a `data.frame` vs a `matrix`)
+
+4.  Copy and paste the error message and name of function into **Google**
+
+### Importantly for Point 4, always accredit the code you use
+
+If you used stackoverflow or any other website use code comments like \# or a comment before the code chunk to accredit the webite
+
+Ex.
+
+Code from www.helpfulwebsite.fakename.com/user1/howto
+
+```{r}
+1+1 #www.helpfulwebsite.fakename.com/user1/howto
+```
+
+# Introduction to RNAseq data analysis
+
+## Accreditation
+
+The BiocSwirl interactive course was based on [this RNA-seq workflow](https://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html) published by Love et al., updated in 2019.
+
+## Overall Learning outcomes
+
+-   What is RNAseq?
+-   Some considerations for planning RNAseq experiments
+-   What kind of questions can be addressed using RNAseq?
+-   What is differential expression analysis?
+-   How to conduct differential expression analysis of RNAseq data in R
+
+## Resources mentioned in the lecture
+
+-   A short overview over [gene expression](https://www.nature.com/scitable/topicpage/gene-expression-14121669/) published by Scitable (Nature)
+-   [RNA-Seq: a revolutionary tool for transcriptomics, Wang et al. 2009](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2949280/)
+-   An overview over [different RNAseq analysis workflows](https://www.cd-genomics.com/resourse-Bioinformatics-Workflow-of-RNA-Seq.html)
+-   [The RNA-seq workflow used in this class for differential expression analysis](https://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html) published by Love et al., updated in 2019.
+-   The [BiocSwirl](https://github.com/biocswirl-dev-team/BiocSwirl) documentation on github
+
+
+## RNAseq workflow and course structure
+
+![RNAseq workflow image](https://raw.githubusercontent.com/biocswirl-dev-team/learning_resources/workshop_cshl/CSHL_workshop/RNAseq.jpg)
+
+### Steps of the workflow
+Feel free to take notes on the different steps as you work your way through the RNAseq workflow.
+#### Live demo
+
+
+-   Installation of packages:
+-   fastq download:
+-   fastq trimming:
+
+#### Interactive Course
+
+-   Read alignment & quantification:
+-   Pre-processing:
+-   Principle Component Analysis:
+-   DESeq2
+-   Examine DESeq2 results:
+-   Pathway analysis:
+-   FastQC: 
+
+### Tools used within the workflow
+
+Below is a list of tools that are used within the workflow. If available, each tool will be a link to further resources. Feel free to take notes on what you're learning about each tool.
+
+-   [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/):
+-   [trimgalore](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/):
+-   [STAR](https://github.com/alexdobin/STAR):
+-   [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml):
+-   [Tophat](https://ccb.jhu.edu/software/tophat/index.shtml):
+-   [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html):
+-   [Bioconductor package Rsubread](https://bioconductor.org/packages/release/bioc/html/Rsubread.html):
+-   [Bioconductor package DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html):
+-   [EnrichR](https://maayanlab.cloud/Enrichr/):
+
+## Introduction to Bioconductor
+
+[Bioconductor](https://bioconductor.org/) is an open source collection of bioinformatics software, written in R.
+
+## Introduction to BiocSwirl
+
+[BiocSwirl](https://github.com/biocswirl-dev-team/BiocSwirl) is an R package containing interactive coding courses teaching Bioconductor tools and workflows.
+
+## BiocSwirl course installation
+
+```{r, eval = FALSE}
+# installation of devtools
+install.packages("devtools")
+library(devtools)
+# installation of biocswirl with vignettes
+devtools::install_github("biocswirl-dev-team/BiocSwirl", build_vignettes = TRUE,force = TRUE)
+# load Biocswirl library
+library(BiocSwirl)
+# load swirl
+library(swirl)
+```
+
+```{r, eval = FALSE}
+# list all available courses
+list_courses()
+# select the RNAseq course for installation
+load_course('RNAseq')
+# start the BiocSwirl course environment
+start_course()
+```
+
+These following commands can be used within the BiocSwirl course environment.
+
+```{r, eval = FALSE}
+bye() #exits the course environment
+play() #suspends feedback, allows you to ‘play’ with code
+nxt() #continue feedback
+skip() # skips question, not recommended
+```
+
+# Stay in touch
+
+-   Visit BiocSwirl's Twitter page for more updates on our project.: <https://twitter.com/bioctools>
+-   <https://bioinformaticstutorials.github.io/>
+-   <https://github.com/biocswirl-dev-team/BiocSwirl>
