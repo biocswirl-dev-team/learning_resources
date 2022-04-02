@@ -1,0 +1,575 @@
+---
+title: "Bulk RNA-Sequencing"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+#library(RCurl)
+library(learnr)
+library(Rsubread)
+library(DESeq2)
+library(pheatmap)
+library(Rsubread)
+library(tximport)
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+library(GenomicFeatures)
+library(RColorBrewer)
+library(apeglm)
+
+
+
+knitr::opts_chunk$set(echo = FALSE)
+tutorial_options(exercise.timelimit = 120)
+knitr::opts_chunk$set(error = TRUE)
+
+
+setwd(getwd())
+dataset <- data.frame(read.table('GSE147507_RawReadCounts_Human.tsv',sep='\t',
+                      header = TRUE, stringsAsFactors = FALSE, row.names = 1))
+counts <- dataset
+dataset <- dataset[,c(1:6)]
+colData <- data.frame(names = colnames(dataset), condition = c("mock","mock","mock","treatment","treatment","treatment"))
+colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
+
+
+dds <- DESeqDataSetFromMatrix(dataset, colData, design= ~ condition)
+
+rlog_dds <- rlog(dds)
+sampleDist <- dist(t(assay(rlog_dds)))
+sampleDistMatrix <- as.matrix(sampleDist)
+rownames(sampleDistMatrix) <- dds$condition
+
+
+res_dds <- DESeq(dds)
+res <- results(res_dds)
+
+res_sig <- subset(res, padj < 0.1)
+
+res_shrink <- lfcShrink(res_dds, coef="condition_treatment_vs_mock", type="apeglm")
+IL6_data <- res_shrink[rownames(res_shrink) == 'IL6',]
+```
+
+
+```{r kept_dds, include=FALSE}
+keep <- rowSums(counts(dds)) > 1
+dds <- dds[keep,]
+
+#on kept
+rlog_dds <- rlog(dds)
+sampleDist <- dist(t(assay(rlog_dds)))
+sampleDistMatrix <- as.matrix(sampleDist)
+rownames(sampleDistMatrix) <- dds$condition
+
+```
+
+## RNA sequencing 
+  - RNA sequencing
+    - Explore gene expression at sample level
+    - Central dogma
+    <br>
+    ![Central Dogma](https://github.com/STRIDES-Codes/Creating-Rmarkdown-courses-to-teach-bioinformatic-analysis-pipelines/blob/main/Screenshots/central_dogma.gif?raw=true)[source](https://www.ncbi.nlm.nih.gov/Class/MLACourse/Modules/MolBioReview/central_dogma.html)
+      - The Central Dogma explains the flow of genetic information from DNA to RNA to proteins. Protein production in a living cell consists of two processes — transcription and translation. In transcription, the information in the double helical DNA of cells is converted into single stranded RNA, and during translation RNA is “read” to make proteins composed of amino acids.
+    - RNA sequencing
+      - A high-throughput sequencing method to provide insight into the transcriptome of a cell. Compared to traditional sequencing techniques, such as Sanger sequencing, RNA sequencing  provides far higher coverage and greater resolution of the dynamic nature of the transcriptome.
+      - [Introduction video](https://www.youtube.com/watch?v=tlf6wYJrwKY)
+    - Differences between bulk and single cell RNA-seq (scRNA-seq)
+        - The main difference between single cell and bulk RNA-seq is that each sequencing library represents a single cell, instead of a population of cells. 
+        - Bulk RNA-seq averages gene expression across all cells in a sample while scRNA-seq proﬁles the transcriptome of each individual cell. 
+        - scRNA-seq is  able to identify signiﬁcant heterogeneity of phenotypes within individual cell subtype populations. 
+    - Biology at each step of [Seurat Processing Pipeline](https://satijalab.org/seurat/archive/v3.2/pbmc3k_tutorial.html)
+
+
+<details>
+<summary> More details about RNA-seq </summary>
+  1. [Quick video overview of the central dogma](https://www.khanacademy.org/science/in-in-class-12-biology-india/xc09ed98f7a9e671b:in-in-the-molecular-basis-of-inheritance/xc09ed98f7a9e671b:in-in-transcription-and-rna-processing/v/central-dogma-of-molecular-biology-2)
+  2. [Quick text-based overview of the central dogma](https://www.khanacademy.org/science/in-in-class-12-biology-india/xc09ed98f7a9e671b:in-in-the-molecular-basis-of-inheritance/xc09ed98f7a9e671b:in-in-transcription-and-rna-processing/a/intro-to-gene-expression-central-dogma)
+  3. [Another quick text-based overview of the central dogma](https://www.yourgenome.org/facts/what-is-the-central-dogma)
+  4. [An example protocol for RNA sequencing and analysis](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4863231/)
+</details>
+
+<details>
+<summary> Differences between bulk and scRNA seq </summary>
+  - Bulk
+    - Higher sequencing depth allows exploration of more genes
+    - Unable to distinguish gene expression changes due to tissue composition changes
+    - Tissues sequenced should be as homogenous as possible
+    - For heterogeneous tissues, may be beneficial to FACS sort and sequence the different cell types separately
+    - Lower cost and ease of preparation allow for more samples to be analyzed
+    - More conditions can be studied
+    - More replicates can be used to ensure significance of results
+  - Single Cell
+    - Allows for exploration of heterogeneity in your tissue of interest
+    - Allows for discovery of rare cell types
+    - Due to high cost, removing batch effects can be a substantial problem
+</details>
+
+
+## Introduce Lesson Data
+
+In this tutorial we will be repurposing an existing RNA-Seq dataset. The original data can be found [here](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE147507). It is from a [paper](https://www.biorxiv.org/content/10.1101/2020.03.24.004655v1.full)  that characterizes the transcriptional response to SARS-CoV-2 infection in bronchial epithelial cell lines. 
+
+![Paper Figure](https://www.biorxiv.org/content/biorxiv/early/2020/03/24/2020.03.24.004655/F3.large.jpg)
+
+
+## Preprocessing Data Before Processing
+
+### Basic Preprocessing steps
+Prior to analyzing RNA-Seq data, it is important to preprocess it. These steps of the bulk RNA-Seq analysis can not easily be done in R. They require a unix based command terminal, and will not be covered interactively in this workshop. These steps include:
+  - Quality check of raw sequenced reads
+  - Remove low quality bases from sequenced reads
+  - Alignment to a reference genome
+We'll briefly cover each of these steps, while also providing more resources so you can learn more after the workshop
+
+### Determining Quality of Sequenced Read Libraries
+Prior to any analysis, it is necessary to determine if your sequenced libraries are high enough quality to analyze. One of the most commonly used softwares for this purpose is [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/). This software is a Java based tool that gives a quick overview of various quality metrics. It provides two outputs:
+  1. A raw data output containing various metrics in text
+  2. A more user friendly HTML report for each library, containing summary metrics and plots. 
+
+### Reading the FastQC Report
+One of the most important details in the quality report is the average sequencing quality of the reads. The picture shown here is very exemplary and depicts a slightly lower quality at the first few bases of the reads and generally high, but decreasing quality over the length of the average reads.
+<br>
+![Average Reads Plot](https://github.com/mmoss609/LessonImageDump/blob/main/fastqc.png?raw=true)
+```{r FastQC_q1, echo=FALSE}
+question("# Take some time to look at the sequencing quality report. Which positions within the reads appear to have the lowest average quality?",
+  answer("positions 1-5"),
+  answer("positions 150-151", correct = TRUE),
+  answer("positions 20-69"),
+  answer("positions 75-124"),
+  answer("positions 125-150"),
+  allow_retry = TRUE
+)
+```
+Another quality measure for RNAseq reads is the distribution of bases over all reads - given the large number of reads generated it should result in mostly random distribution. 
+<br>
+![Base Distribution Plot](https://github.com/mmoss609/LessonImageDump/blob/main/basedist.png?raw=true)
+One common exception is again that the first few sequencing cycles often produce somewhat aberrant features.
+```{r FastQC_q2, echo=FALSE}
+question("# In which case could a stronger bias for certain bases at the start of the reads be expected, without indicating low read quality?",
+  answer("Reads are barcoded", correct = TRUE),
+  answer("Readthrough of short reads"),
+  answer("Overrepresented sequences"),
+  allow_retry = TRUE
+)
+```
+One of the most common problems that can make RNAseq samples virtually unusable for analysis is the overamplification of very few sequences (often from ribosomal RNA), which can then make up a very large amount of the reads.
+
+If the sequenced libraries pass all of your quality control steps, they can then be aligned to the reference genome. If not, there are certain steps you can take to correct moderately low quality data
+
+<details>
+<summary> More information about FastQC </summary>
+  1. [An example of a high quality FastQC report](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/good_sequence_short_fastqc.html)
+  2. [An example of a low quality FastQC report](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/bad_sequence_fastqc.html)
+  3. [Full FastQC documentation](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/)
+</details>
+
+### Remove Low Quality Bases/Reads
+If fastqc detects a high amount of low quality reads, or reads with high adapter content, it is necessary to remove these low quality reads or read-parts from the data.
+
+The example data of this lesson is generally of high quality, but in many cases samples have low quality reads that should be trimmed. Additionally, it is good practice for all samples to be processed the same way. A good program to perform read trimming is trim_galore. With the following command, you could perform trimming in your command line:
+
+`trim_galore SRR11412215.chr20.fq.gz`
+
+trim_galore has many options, however it will usually be quite good even with default parameters. One important thing to remember is to pass the --paired options if you have paired-end files. The other options often become relevant when you need to handle specific problems or particularities of the samples.
+
+trim_galore is able to use several QC metrics to remove low quality reads. These include:
+  - Minimal read length
+  - Maximal read length
+  - Read quality based on FastQ score
+
+
+After removing low quality data from your libraries, you can move on to the final step of preprocessing, aligning to the reference genome.
+
+<details>
+<summary> More information trim_galore </summary>
+  1. [Link to download the software](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/)
+  2. [Github for trim_galore](https://github.com/FelixKrueger/TrimGalore)
+</details>
+
+### Align to reference genome
+Once reads have been properly checked for quality they need to be aligned to the genome or transcriptome, so that counts for genes (or transcripts) can be generated. Aligning to the full genome or only the transcriptome are two different approaches, both with different advantages and disadvantages.
+```{r Alignment_q1, echo=FALSE}
+question("# Which of the following statements is true for mapping reads to the transcriptome?",
+  answer("Very fast due to smaller search space"),
+  answer("Splice sites are not an issue"),
+  answer("Unreliable for species with incomplete annotation"),
+  answer("All of the above", correct = TRUE),
+  allow_retry = TRUE
+)
+```
+
+Compared to mapping to the transcriptome, alignment to the full genome sequence takes much longer, but can possibly identify unknown transcription sites or splice sites.
+
+There are several sequence alignment softwares that are commonly used to align RNA-Seq data. These include
+  - [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml)
+  - [BWA](http://bio-bwa.sourceforge.net/)
+  - [HISAT2](http://daehwankimlab.github.io/hisat2/)
+  - [STAR](https://github.com/alexdobin/STAR)
+  
+These software will all align your raw sequenced reads to a reference genome. Differences in the design algorithms will determine the accuracy and speed of these alignments, and these tradeoffs should be considered before choosing which to use in your own analysis. 
+
+<details>
+<summary> Brief discussion of reference genomes </summary>
+Most species already have a reference genome and genome annotation completed, which can be found either at the NCBI, EMBL, or UCSC websites. For RNA-seq alignment, it is important to create a reference transcriptome that includes information about where genes are located on the reference genome. Many softwares have these premade for commonly used species, including Homo sapien (human), Mus musculus (mouse), and Rattus norvegicus (rat)
+</details>
+
+<details>
+<summary> Article discussing tradeoffs between different transcriptome alignment softwares </summary>
+[Discussion]https://www.frontiersin.org/articles/10.3389/fpls.2021.657240/full
+</details>
+
+Genome alignment programs will produce files in SAM (sequence alignment map) or BAM (its binary compressed counterpart) format. This file type contains - similarly to fastq files - one entry for each read and saves the genome position the read mapped to in addition to all information that was already saved in the fastq file.  
+
+## Counting Reads
+While mapping reads to the genome and saving their positions allows for many different types of analyses, in RNAseq experiments one is usually interest in the number of reads that belong to each gene or transcript. To obtain these numbers, it is necessary to count reads. There are multiple programs available to do so that usually take bam files as input. A common one is [htseq](https://htseq.readthedocs.io/en/master/), which is based on python and also provides packages to write your own counting scripts in python.
+
+There also exists an R function to count reads in bam files called featureCounts (from the [Rsubread](https://bioconductor.org/packages/release/bioc/html/Rsubread.html) package). 
+
+Use the featureCounts function to assign gene counts for the example bam file included with this course (the file name is stored in the variable bamfile) to an object 'counts'. Remember that the sample from the example dataset comes from human cell lines. The current human genome assembly is "hg38". Use that as value for the "annot.inbuilt" parameter. 
+
+`counts <- featureCounts(bamfile, annot.inbuilt = "hg38")`
+
+```{r featureCounts, exercise = TRUE, exercise.setup="setup",  exercise.eval = FALSE}
+# Look at the first 4 lines of your counts data
+head(counts)
+```
+
+This step would be done for every sequenced library, and then all counts columns would be combined into one matrix where each column is a library and each row contains the counts for a specific gene across libraries.
+
+## Building A DESeq Object
+
+One of the most commonly used packages for RNA-seq data analysis, at the sample level and gene expression level, is [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) (this package is the followup to the original DESeq, hence the 2). This package contains tools for batch effect normalization, dimensionality reduction of samples, and differential gene expression analysis. Prior to doing this though, the data must be in a format that the DESeq2 functions can read, also known as a DESeq data set (dds). Thankfully, the package has a function that can convert a normal counts matrix into a DESeq dataset object, the `DESeqDataSetFromMatrix()` function. 
+
+The first step of creating the dds object is to prepare a colData object containing the details of the experiment and the comparisons we want to test. For this workshop, that colData object has been provided, but for your own experiments you will need to create it yourself
+
+```{r DESeq_q1, exercise = TRUE, exercise.setup="setup",  exercise.eval = FALSE}
+# Look at the colData object
+colData
+```
+
+Next, we will load our gene count table (dataset) into the DESeq2 specific R object. This allows us to store all information associated with our experiment.
+
+```{r DESeq_q2, exercise = TRUE, exercise.setup="setup",  exercise.eval = FALSE}
+# Load our gene count table (dataset) into a DESeq2 specific R object.
+dds <- DESeqDataSetFromMatrix(dataset, colData, design= ~ condition)
+```
+
+Not all genes are expressed in all cell types. Therefore, we will end up with lots of zeros in the gene count table. 
+
+```{r DESeq_q3, exercise = TRUE, exercise.setup="setup",  exercise.eval = FALSE}
+# Take a look at the head of the gene count table that we created previously. You can access data from the deseq object using assay().
+head(assay(dds))
+```
+
+```{r DESeq_q4, echo=FALSE}
+question("# Which is the first gene in the table with a read count of zero across all samples and replicates?",
+  answer("CXCL2"),
+  answer("KRT18"),
+  answer("ABCAM"),
+  answer("DDX11L1", correct = TRUE),
+  allow_retry = TRUE
+)
+```
+
+It is often best to run the data normalizations on only genes that are **expressed in at least 1 condition** (removing zeros). We will do this in two steps. Firsts, find all genes that are expressed in at least 1 condition. Since each row represents 1 gene, we can do this by calculating the sum of each row and removing the ones where the sum is less than 1 (equal to 0). We will do this using the **rowSum** command on our dds object, saving the results in a new object called **keep**
+
+```{r DESeq_q5, exercise = TRUE, exercise.setup="setup",  exercise.eval = FALSE}
+# Find rows with a rowSum > 1 and assign them a new R object called "keep". We can get the counts from the dds object using the counts() function
+keep <- rowSums(counts(dds)) > 1
+```
+
+Next, we will subset the dds object so it only has the rows contained in the **keep** obeject. 
+
+```{r DESeq_q6, exercise = TRUE, exercise.setup="kept_dds",  exercise.eval = FALSE}
+# Subset the dds object for the rows in "keep". Assign the result to dds again. If you need a review on subsetting, please refer back to the notes from the intro to R workshop
+dds <- dds[keep,]
+```
+
+## Normalizing The Data
+We do these steps because most statistical tests work best on data with the same range of variance. For RNA-seq data, the variance typically grows with the mean of expression. If we were to do a PCA (principle component analysis) now to look at the variance in the data, the genes with the highest read counts will contribute the most to the overall variance.
+
+The DESeq2 package offers two different transformations as solutions for this problem. One of them is the regularized-logarithm transformation, or rlog. 
+
+Let's transform our data using rlog() and assign the result to rlog_dds. This might take a moment.
+
+```{r DESeq_q7, exercise = TRUE, exercise.setup="kept_dds",  exercise.eval = FALSE}
+# Use the rlog() function on the dds object to get the log transform
+rlog_dds <- rlog(dds)
+```
+
+Another use of the rlog() function is to normalize our data for library size. Different samples and replicates can be sequenced at different depths (total read count in sample) potentially inflating difference in counts between samples and replicates. This means that gene x in sample A could have five times as many reads than the same gene in sample B because it is actually more expressed highly, or because sample A had been sequenced more deeply and thus has more reads over all. We need to eliminate the second option by normalizing for library size. 
+
+Take a moment to look at the difference in total counts and variance between raw and rlog transformed counts. See how, in the raw data, genes with the highest read counts have the highest variance
+<br>
+![rlog image](https://seqqc.files.wordpress.com/2015/02/heteroplot-1.png)
+
+<details>
+<summary> Note on batch effect correction </summary>
+While the DESeq2 counts normalization is a very common and effect batch effect correction, there are others (Such as Transcripts Per Million, Reads Per Kilobase Million, etc) that can be used based on the specifics of your data. While they will not be covered in this workshop, a discussion of those methods can be found [here](https://www.reneshbedre.com/blog/expression_units.html).
+</details>
+
+
+## Linear Dimensionality Reduction
+We can get an initial overview of our RNA-seq data by checking how similar or different our samples are at baseline. We'll assess the similarity between samples by calculating the so called Euclidean Distance. We do this on the transformed data so that all genes contribute approximately equally to this distance.
+
+In R, this is done using the **dist()** function. However, this function will only take the transpose of our data, so we must first calculate that. 
+
+```{r PCA_q1, exercise = TRUE, exercise.setup="setup",  exercise.eval = FALSE}
+# after getting our data from the rlog_dds object using the assay() function, use t(), and dist() nested into each other to calculate the sample distance from our transformed data rlog_dds. Assign the results to "sampleDist"
+sampleDist <- dist(t(assay(rlog_dds)))
+```
+
+
+Before we can visualize the similarities between our samples using a heatmap, we need to create an appropriate matrix with column and row names that can be used as labels. 
+
+```{r PCA_q2, exercise = TRUE, exercise.setup="setup",  exercise.eval = FALSE}
+# Convert your sampleDist object to a matrix and assign it to "sampleDistMatrix".
+sampleDistMatrix <- as.matrix(sampleDist)
+```
+
+```{r PCA_q3, exercise = TRUE, exercise.setup="setup",  exercise.eval = FALSE}
+# Assign rownames (using the rownames() function) to the sampleDistMatrix based on the experimental conditions and/or your sample names (the `condition` information from your dds object)
+rownames(sampleDistMatrix) <- dds$condition
+```
+
+Now it's finally time look at the differences between our data by plotting a heatmap of our samples.
+
+```{r PCA_q4, exercise = TRUE, exercise.setup="setup",  exercise.eval = FALSE}
+#Use what you just learned to plot the heatmap with pheatmap(). Use sampleDist for both clustering_distance_rows and clustering_distance_cols. Use the provided "colors" object to color your heatmap.
+
+pheatmap(sampleDistMatrix, clustering_distance_rows = sampleDist, clustering_distance_cols = sampleDist, col = colors)
+```
+
+Take a look at this heatmap and try to understand it. The dendrogram allows you to determine which samples are similar, and thus which are different, based on which are connected by each branch. 
+
+```{r PCA_q5, echo=FALSE}
+question("# Which sample is most different from the others?",
+  answer("Series1_NHBE_SARS.Cov.2_2"),
+  answer("Series1_NHBE_SARS.Cov.2_3"),
+  answer("Series1_NHBE_Mock_3", correct = TRUE),
+  allow_retry = TRUE
+)
+```
+
+Another way of visualizing distances between samples is running a Principle Component Analysis (PCA). Conveniently, the DESeq2 package comes with a function that computes the analysis and visualizes it for you.
+
+```{r PCA_q6, exercise = TRUE, exercise.setup="setup",  exercise.eval = FALSE}
+#Try using plotPCA() on your rlog normalized data rlog_dds.
+plotPCA(rlog_dds)
+```
+
+PCA shows our samples on a two-dimensional plot where they spread out in the two directions that explain most of the differences between the samples (x axis = most differences, y = second most differences). In a successful RNA-seq experiment these directions frequently represent the difference between experimental conditions and replicates. The percent difference explained by these directions is commonly shown in the axis labels.
+
+```{r PCA_q7, echo=FALSE}
+question("# The differences between which groups of samples contributes the most to the variance in this dataset?",
+  answer("Replicates"),
+  answer("Conditions", correct = TRUE),
+  allow_retry = TRUE
+)
+```
+
+
+## Differential Expression Testing
+
+###Looking at the DESeq object
+When RNA-seq experiments are run with multiple conditions, a central aspect of the analysis is to test for significant changes in gene expression between the conditions. This is where the function DESeq() comes into play. This function will run the differential expression pipeline on our raw counts.
+
+
+```{r diffeq_q1, exercise = TRUE, exercise.setup="setup",  exercise.eval = FALSE}
+
+# Run the differential expression analysis by using DESeq() on the R object containing our raw counts and assign the results to "res_dds". The function will output the different steps as it is performing them. This will take a moment!
+
+res_dds <- DESeq(dds)
+```
+
+```{r diffeq_q2, exercise = TRUE, exercise.setup="setup",  exercise.eval = FALSE}
+
+# Now, we can build the results table using the results() function. Assign the results table to "res".
+
+res <- results(res_dds)
+```
+
+
+Since our data only contains two conditions, DESeq will automatically make the correct comparison. It will compare condition "treatment" to condition "mock". If we had more than two conditions and wanted more sophisticated comparisons, we would need to specify them with the contrast attribute to results().
+
+```{r diffeq_q3, exercise = TRUE, exercise.setup="setup",  exercise.eval = FALSE}
+
+# Let's look at the results table using the head() command.
+
+head(res)
+```
+
+
+```{r diffeq_q4, exercise = TRUE, exercise.setup="setup",  exercise.eval = FALSE}
+
+# As you can see, this dataframe contains several columns with results. Open the meta data of these columns to understand the meaning of them. Use mcols().
+
+mcols(res)
+```
+
+```{r diffeq_q5, echo=FALSE}
+question("# Which column contains the Wald test p-value?",
+  answer("Column 1"),
+  answer("Column 2"),
+  answer("Column 3"),
+  answer("Column 4"),
+  answer("Column 5", correct = TRUE),
+  answer("Column 6"),
+  allow_retry = TRUE
+)
+```
+
+
+```{r diffeq_q6, exercise = TRUE, exercise.setup="setup",  exercise.eval = FALSE}
+
+# We can also summarize the results table with the summary() function. Try it out!
+
+summary(res)
+```
+
+According to the summary, there are 16,360 genes in this dataset. These will be used for downstream analysis. 
+
+In high-throughout experiments, it is important not to use the raw pvalues but to adjust for multiple testing. Conveniently, DESeq2 already uses the Benjamini-Hochberg (BH) adjustment. The adjusted pvalue is saved in column 6 of the results table. This adjusted pvalue represents the False Discovery Rate (FDR) for our data. Let's say we consider 10% false positives acceptable, then we can consider all genes with an adjusted p-value below 10% (0.1) as significant. Let's find out how many significant genes we have in this dataset!
+
+```{r diffeq_q7, exercise = TRUE, exercise.setup="setup",  exercise.eval = FALSE}
+
+# Try and filter the results table for an adjusted p-value < 0.1. You could use the subset() function on your 'res' object. Assign the results to res_sig.
+
+res_sig <- subset(res, padj < 0.1)
+
+```
+
+
+We are going to sort the object by log2FoldChange in order to show which genes are the most different between conditions. 
+
+
+```{r diffeq_q8, exercise = TRUE, exercise.setup="setup",  exercise.eval = FALSE}
+
+# Using the head() function on this sorted listen will give you the gene that decreases the mst from treatment to mock, while using the tail() function will show you the gene that increases the most
+
+head(res_sig[order(res_sig$log2FoldChange),])
+tail(res_sig[order(res_sig$log2FoldChange),])
+```
+
+```{r diffeq_q9, echo=FALSE}
+question("# What answer choice shows the gene that increasess the most and decreases the most, respectively?",
+  answer("PGR/ESR1"),
+  answer("PRL/AVPR1A"),
+  answer("AVP/TNFa"),
+  answer("RBM20/CSF3",correct = TRUE),
+  allow_retry = TRUE
+)
+```
+
+### Understanding DESeq Results
+Next, we can plot the normalized counts (expression) for single genes across the different experimental conditions. This is really helpful for looking at control genes and assessing the success of the experiment. For example, in a knockdown experiment, you can check if the expression of that gene actually decreased.
+
+```{r diffeq_q10, exercise = TRUE, exercise.setup="setup",  exercise.eval = FALSE}
+
+# For this dataset, let's take a look at IL6. You can use the DESEq2 function plotCounts() to extract and plot counts for specific genes (using the attribute gene=). Try it out!
+
+plotCounts(dds, gene = "IL6")
+
+```
+
+
+As you can see, IL6 is higher in the treated samples than in the untreated ones. You can do this type of single gene analysis for ANY gene in your dataset.
+
+Next we will look at the MA plot. An MA plot is a two-dimensional scatterplot used to visualize gene-expression changes between two different conditions as a function of the number of normalized reads mapped to those genes. DESeq has a built in function specifically to generate this plot on your dataset. This plot typically displays the change in gene expression as log2 fold change on the y-axis and the log of mean normalized expression counts of both samples on the x-axis.  
+
+The creators of DESeq recommend shrinking the log2FoldChange prior to generating the MA plot, in order to make visualization easier to understand. We will do the same now. 
+
+```{r diffeq_q11, exercise = TRUE, exercise.setup="setup",  exercise.eval = FALSE}
+
+# Use the lfcShrink() on the res_dds object, with coef="condition_treatment_vs_mock" and type="apeglm" as parameters. Assign it to "res_shrink".
+
+res_shrink <- lfcShrink(res_dds, coef="condition_treatment_vs_mock", type="apeglm")
+
+```
+
+```{r diffeq_q12, exercise = TRUE, exercise.setup="setup",  exercise.eval = FALSE}
+
+# After shrinking the log2 fold changes, we can plot the MA plot with the command plotMA(). Use it on the res_shrink object you just created. Also, use the paramter ylim=c(-5,5) to determine the limits of the y-axis that are to be plotted.
+
+plotMA(res_shrink, ylim=c(-5,5))
+
+```
+
+What this plot tells us is that most genes are more highly expressed in treatment compared to mock. However, we can also get this information from a volcano plot, which is commonly used in publications and you have likely seen before. 
+
+A volcano plot is most commonly used in publications to visualize differential gene-expression results. Volcano plots typically display the log2 fold change of gene expression on the x-axis and the -log2 transformed p-value or adjusted p-value on the y-axis. This usually leads to a pattern of data points looking like a volcano. Here we will make a rudimentary one first, and then add on some features to make the plot more informative to both the data analyst and the interested reader.
+
+
+```{r volcano_q1, exercise = TRUE, exercise.setup="setup",  exercise.eval = FALSE}
+
+# Let's make a volcano plot, which is really just a scatterplot. Use the function plot() and the data in "res". This object contains both the log2 fold change and the adjusted pvalues. We'll plot the negative log2 of the p-values by using the log2() function, and making it negative, on the res$padj row
+
+plot(x=res$log2FoldChange, y=-log2(res$padj))
+
+```
+But let's work on making this plot an actual, publication quality figure!
+
+
+```{r volcano_q2, exercise = TRUE, exercise.setup="setup",  exercise.eval = FALSE}
+
+# Let's start with labeling the x and y axes properly. Use the same command for the plot and add the parameters xlab= and ylab=. Label the x-axis with "log2FoldChange" and the y-axis with "-log2(adjusted p-value)". Also, try changing the appearance of the data point with the parameter pch=16
+  
+plot(x=res$log2FoldChange, y=-log2(res$padj), xlab="log2FoldChange", ylab="-log2(adjusted p-value)", pch=16)
+
+```
+
+This is already much better, but we can make it even more informative with a few more minor changes
+
+```{r volcano_q3, exercise = TRUE, exercise.setup="setup",  exercise.eval = FALSE}
+
+# Now, we will add horizontal and vertical lines to the plot to represent the pvalue and log2FoldChange cutoff to what we consider significant results. In base R (what we're working with right now), the lines are added after the main graph was plotted, with the command abline. The parameters h= and v= determine the y-value and x-value for horizontal lines and vertical lines respectively. Try drawing a horizontal line with abline(h= 0.1), and 2 vertical lines to at -1 and 1. You can do this with an additional abline command, setting v=c(-1,1)
+  
+plot(x=res$log2FoldChange, y=-log2(res$padj), xlab="log2FoldChange", ylab="-log2(adjusted p-value)", pch=16)
+abline(h=0.1)
+abline(v=c(-1,1))
+
+
+```
+
+We can highlight a gene of interest, e.g. IL6, with the command points(). The object IL6_data contains the data from res you'll need. It has the same column names as res. Try using the function points() on it, and use the parameter col="red" and pch = 16. 
+
+```{r volcano_q4, exercise = TRUE, exercise.setup="setup",  exercise.eval = FALSE}
+
+# Try using the function points() after your plot, and use the parameter col="red" and pch = 16. 
+  
+plot(x=res$log2FoldChange, y=-log2(res$padj), xlab="log2FoldChange", ylab="-log2(adjusted p-value)", pch=16)
+abline(h=0.1)
+abline(v=c(-1,1))
+points(IL6_data$log2FoldChange, -log2(IL6_data$padj), col = "red", pch = 16)
+
+
+```
+
+The final thing we will do to this plot is add a legend
+
+```{r volcano_q5, exercise = TRUE, exercise.setup="setup",  exercise.eval = FALSE}
+
+# Add this legend using the legend() function, written as legend("topleft",c("IL6"), fill = c("red")). 
+  
+plot(x=res$log2FoldChange, y=-log2(res$padj), xlab="log2FoldChange", ylab="-log2(adjusted p-value)", pch=16)
+abline(h=0.1)
+abline(v=c(-1,1))
+points(IL6_data$log2FoldChange, -log2(IL6_data$padj), col = "red", pch = 16)
+legend("topleft",c("IL6"), fill = c("red"))
+
+```
+
+And that's your first volcano plot! There are nicer ways to make this plot using ggplot2, however this will not be covered in the current lesson. 
+
+And that concludes today's workshop. There are many steps you can do next on your data, depending on the specific questions you hope to answer. These can include: 
+
+<details>
+<summary> Downstream Analysis of RNA-Seq Data </summary>
+  1. [Gene Set Enrichment Analysis](https://www.gsea-msigdb.org/gsea/index.jsp)
+  2. [Gene Ontology](https://maayanlab.cloud/Enrichr/)
+  3. Integration With Other Sequencing Modalities
+  4. [Heatmap and Heirarchical Clustering](https://www.rdocumentation.org/packages/heatmap3/versions/1.1.9/topics/heatmap3)
+</details>
